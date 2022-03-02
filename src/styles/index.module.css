@@ -1,0 +1,213 @@
+.addPageInputs {
+    width: 35%;
+    margin-left: 2%;
+    font-size: x-large;
+}
+
+.addPromotionList {
+    margin: 0;
+    padding: 0;
+}
+
+.addPromotionListItem {
+    display: block;
+    border: #000 solid 1px;
+    cursor: pointer;
+}
+
+.addPromotionListItem:hover, .addPromotionListItem:focus {
+    background-color: #DCDCDC;
+}
+
+.announcementsContainer {
+    display: inline-block;
+    border: #333 solid 1px;
+    width: 25%;
+    padding: 1px;
+    margin: 1% 4% 0;
+    text-align: center;
+    box-sizing: border-box;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.announcementsContainer:hover {
+    text-decoration-line: underline;
+    text-decoration-color: #483D8B;
+    background-color: #DCDCDC;
+}
+
+.authorizationContainer {
+    margin: 0 30%;
+    border: #61DAFB solid 1px;
+}
+
+.authorizationInputs {
+    display: block;
+    border-color: #000;
+    border-radius: 10px;
+    margin: 4% auto;
+    font-size: larger;
+    height: 50px;
+    width: 90%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.authorizationInputs:last-child {
+    margin-bottom: 2%;
+}
+
+.authorizationLinks {
+    margin-left: 4%;
+    font-size: x-large;
+}
+
+.authorizationLinks, .mobileAuthorizationLinks {
+    font-family: Calibri, sans-serif;
+    color: #000;
+    text-decoration-line: underline;
+}
+
+.authorizationLinks:hover, .mobileAuthorizationLinks:hover {
+    text-decoration-color: #0000FF;
+    cursor: pointer;
+}
+
+.authorizationLinksContainer {
+    text-align: center;
+}
+
+.blockSpans {
+    display: block;
+}
+
+.buttonSpan {
+    margin-left: 5px;
+}
+
+.commonFont {
+    display: inline-block;
+    font-family: Calibri, sans-serif;
+    font-size: xx-large;
+    font-weight: normal;
+}
+
+.commonFont:not(p) {
+    border-bottom: #0000FF solid 2px;
+}
+
+.errorMessage {
+    color: #FF0000;
+    font-family: Calibri, sans-serif;
+    font-size: larger;
+    text-align: center;
+    display: block;
+}
+
+.forgottenPasswordInputs {
+    display: block;
+    text-align: center;
+    margin: 1% 35%;
+    width: 400px;
+    height: 50px;
+    font-size: large;
+}
+
+.header {
+    color: #000;
+    font-family: Calibri, cursive;
+    font-weight: normal;
+    font-size: xx-large;
+    margin: auto;
+    text-align: center;
+    border-bottom: #0000FF solid 2px;
+}
+
+.initialsInputs {
+    width: 50%;
+    height: 40px;
+    text-align: center;
+    font-size: larger;
+}
+
+.mobileAnnouncementsContainer {
+    display: inline-block;
+    vertical-align: top;
+    border: #000 solid 1px;
+    width: 40%;
+    margin: 2.5%;
+    font-size: medium;
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+}
+
+.mobileAuthorizationContainer {
+    border: #00FF00 solid 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 3%;
+
+}
+
+.mobileAuthorizationInputs {
+    display: block;
+    border-color: #000;
+    border-radius: 5px;
+    width: 80%;
+    height: 35px;
+    margin: 0 auto 3%;
+    font-size: medium;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.mobileAuthorizationLinks {
+    font-size: medium;
+}
+
+.mobileAuthorizationLinksContainer {
+    border: #DC143C solid 1px;
+    text-align: center;
+    width: 90%;
+    margin: auto;
+}
+
+.mobilePhotos {
+    width: 95%;
+}
+
+.photos {
+    background-color: #FFF;
+    display: block;
+    border: #000 solid 1px;
+    width: 75%;
+    margin: auto;
+}
+
+.promotionSpan {
+    color: #FF0000;
+}
+
+.submitButton {
+    margin: 5%;
+    padding: 1%;
+    background-color: #FFF;
+    color: #000;
+    border: #0000FF solid 1px;
+    border-radius: 5px;
+    font-size: x-large;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.submitButton:hover {
+    color: #3088C7;
+    text-decoration-line: underline;
+    border-color: #000;
+}

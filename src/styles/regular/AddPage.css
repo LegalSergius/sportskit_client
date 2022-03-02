@@ -1,0 +1,118 @@
+#addButton {
+    margin-top: 2%;
+    margin-left: 0;
+}
+
+#addPageContainer {
+    font-family: Calibri, sans-serif;
+    margin-left: 3%;
+    font-size: x-large;
+}
+
+#addPageError {
+    margin-top: 1%;
+    font-size: x-large;
+    text-align: start;
+}
+
+.addPageLabels {
+    display: block;
+    margin-top: 3%;
+}
+
+#addPageSelect {
+    display: inline-block;
+    margin-left: 2%;
+    padding-right: 2%;
+    vertical-align: middle;
+    font-size: x-large;
+}
+
+#addPageTextarea {
+    display: block;
+    margin-left: 8%;
+    margin-top: 1%;
+    width: 50%;
+    height: 200px;
+    font-size: x-large;
+}
+
+#addPhotoLabel {
+    display: inline-block;
+}
+
+#addPromotionContainer {
+    margin-left: 8%;
+    margin-top: 1%;
+    width: 35%;
+}
+
+.addPromotionListItem:hover {
+    background-color: lightgray;
+}
+
+.clearPhotoItem {
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #FFF;
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    border: #000 solid 1px;
+    font-size: 40px;
+    padding: 8px;
+}
+
+.notClearPhotoItem {
+    display: none;
+}
+
+.clearPhotoItem:hover {
+    color: #FFF;
+    background-color: #000;
+}
+
+#fileChoice {
+    margin-left: 3%;
+}
+
+#newProductContainer {
+    display: block;
+}
+
+#notNewProductContainer {
+    display: none;
+}
+
+#photosContainer {
+    margin-top: 3%;
+}
+
+.photosContainerChild {
+    margin-right: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+#priceInput {
+    width: 15%;
+}
+
+#priceInputSpan {
+    margin-left: 1%;
+}
+
+#productNameInput {
+   padding: 0;
+   margin: 0;
+   width: 100%;
+}
+
+.productPhoto {
+    width: 300px;
+    height: 300px;
+    margin-right: 5px;
+    border: #000 solid 2px;
+    cursor: pointer;
+}

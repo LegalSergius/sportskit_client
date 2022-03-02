@@ -1,0 +1,14 @@
+export const HOME_PAGE = '/';
+export const INFORMATION_PAGE = '/information';
+export const MAP_PAGE = '/map';
+export const AUTH_PAGE = '/auth';
+export const REGISTRATION_PAGE = AUTH_PAGE + '/registration';
+export const ENTER_PAGE = AUTH_PAGE + '/enter/';
+export const FORGOT_PASSWORD_PAGE = AUTH_PAGE + '/forgotPassword';
+export const SERVICE_PANEL = '/servicePanel';
+export const CATALOG = '/catalog';
+export const LIST_PAGE = CATALOG + '/page';
+export const PRODUCT_PAGE = '/product'
+export const ADD_PAGE = SERVICE_PANEL + '/add';
+export const EDIT_PAGE = SERVICE_PANEL + '/edit';
+export const BASKET_PAGE = '/basket';

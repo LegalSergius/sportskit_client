@@ -1,0 +1,41 @@
+.linkButton:hover, .mobileCatalogLink:active {
+    cursor: pointer;
+    border-color: #0000FF;
+    text-decoration-color: #0000FF;
+}
+
+.linkButton:not(.linkButton:last-child) {
+    margin-right: 7%;
+}
+
+#catalogHeader {
+    font-size: 300%;
+}
+
+#catalogContainer {
+    width: 85%;
+    margin: auto;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#mobileCatalogHeader {
+    font-size: x-large;
+}
+
+.mobileCatalogLink {
+    margin-bottom: 5%;
+}
+
+.mobileCatalogLink, .linkButton {
+    display: inline-block;
+    border: #000 solid 2px;
+    text-decoration: underline;
+    padding: 3px;
+}
+
+#productPageLink {
+    display: block;
+    text-align: center;
+}

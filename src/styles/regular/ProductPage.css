@@ -1,0 +1,162 @@
+#basket:hover {
+    text-decoration-color: #0000FF;
+}
+
+.basketSpan {
+    margin-left: 15px;
+}
+
+.basketSpan:hover {
+    text-decoration-line: underline;
+}
+
+#description {
+    padding-top: 5px;
+    display: block;
+    margin-bottom: 5%;
+    height: 300px;
+    overflow: auto;
+}
+
+#descriptionHeader {
+    font-size: xx-large;
+}
+
+.editPageButton {
+    display: inline-block;
+    margin-top: 5%;
+    padding: 15px;
+    text-decoration: none;
+    color: #FFF;
+    border-radius: 5px;
+    background-color: #888;
+}
+
+.editPageButton:hover {
+    background-color: #777;
+}
+
+#editPageContainer {
+    border-top: #000 solid 2px;
+    margin-top: 25px;
+    text-align: center;
+}
+
+#imageSelector {
+    margin: 5% 3% 5% 5%;
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+}
+
+.productName {
+    display: block;
+    text-align: center;
+    margin-bottom: 5%;
+    font-size: 150%;
+    text-decoration-line: underline;
+    text-decoration-color: #3088C7;
+}
+
+.paymentImage {
+    vertical-align: middle;
+}
+
+.paymentButton {
+    margin: 0 5%;
+    padding: 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #3088c7;
+    color: #FFF;
+    font-size: x-large;
+}
+
+.paymentButton:hover {
+    background-color: #0000FF;
+}
+
+#paymentButtonsContainer {
+    margin: 10% auto 0;
+    text-align: center;
+}
+
+.price {
+    margin: 0 2%;
+    font-size: xx-large;
+}
+
+#priceWithPromotion {
+    margin: 0 2%;
+    text-decoration-line: line-through;
+}
+
+#productDescriptionContainer {
+    padding-bottom: 2%;
+    display: inline-block;
+    float: right;
+    width: 40%;
+    vertical-align: middle;
+}
+
+#productImage {
+    display: block;
+    border: #000 solid 1px;
+    width: 80%;
+    margin: auto;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#productImage:focus {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+    cursor: auto;
+    box-shadow: 0 0 0 1000px rgba(200, 200, 200, 0.7);
+}
+
+#productImageContainer {
+    display: inline-block;
+    width: 50%;
+    height: 50%;
+}
+
+.productPromotion {
+    margin: 2%;
+    display: block;
+    font-size: xx-large;
+    color: #FF0000;
+}
+
+.scrollButtons {
+    display: inline-block;
+    border: #000 solid 1px;
+    width: 50px;
+    height: 70px;
+    margin: 0 10%;
+    cursor: pointer;
+}
+
+.focusedScrollButtons {
+    border: #000 solid 1px;
+    width: 50px;
+    height: 70px;
+    cursor: pointer;
+}
+
+.scrollButtons:hover {
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+#scrollButtonsContainer {
+    width: 50%;
+    text-align: center;
+    margin: auto;
+}

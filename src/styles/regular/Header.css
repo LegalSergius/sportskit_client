@@ -1,0 +1,208 @@
+#accountsButton {
+    width: 110px;
+    background-color: #FFF;
+    border-color: #0000FF;
+    border-radius: 10px;
+    cursor: pointer;
+    position: absolute;
+    font-size: large;
+    z-index: 2;
+}
+
+#accountsButtonPic {
+    vertical-align: middle;
+}
+
+#adminItem {
+    border-top: #000 solid 1px;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.authList {
+    width: auto;
+    list-style-type: none;
+    padding: 0;
+}
+
+.authListContainer {
+    padding: 0 5px;
+    border-top: #000 solid 1px;
+    background-color: #FFF;
+    margin-top: 5px;
+}
+
+.authListItemLink {
+    color: #000;
+    text-decoration: none;
+}
+
+.authListItemLink:hover {
+    text-decoration: underline;
+}
+
+#authStateImage {
+    vertical-align: middle;
+}
+
+#basketButton {
+    display: inline-block;
+    float: right;
+    background-color: #FFF;
+    color: #000;
+    text-decoration: none;
+    border: #0000FF solid 2px;
+    border-radius: 10px;
+    text-align: center;
+    font: large Calibri, sans-serif;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 110px;
+}
+
+#basketButton:hover {
+    border-color: #000;
+    color: #0000FF;
+    font-weight: bold;
+}
+
+#basketButtonPic {
+    display: block;
+    margin: auto;
+}
+
+#container {
+    background-color: #FFF;
+    border-bottom: #A9A9A9 solid 1px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.dropDownList {
+    background-color: #FFF;
+    border: #000 solid 1px;
+    list-style-type: none;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+.dropDownListItemLink {
+    color: #0000FF;
+    display: block;
+    padding: 8px;
+    font-family: Calibri, cursive;
+    text-decoration: #FFF;
+}
+
+.dropDownListItemLink:hover {
+    background-color: #0000FF;
+    color: #FFF;
+}
+
+#headerContainersChild {
+    position: absolute;
+    left: 32%;
+}
+
+#inputAndListContainer {
+    display: inline-block;
+    position: absolute;
+    top: -10px;
+    width: 400px;
+    text-align: center;
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+    z-index: 2;
+}
+
+.listItem {
+    display: block;
+    border: #000 solid 1px;
+    cursor: pointer;
+    background-color: #FFF;
+}
+
+.listItem:hover, .listItem:focus {
+    background-color: #DCDCDC;
+}
+
+#logo:hover {
+    cursor: pointer;
+}
+
+#logotypeContainer {
+    display: inline-block;
+    margin-top: 2%;
+    vertical-align: middle;
+}
+
+#mainButtonsContainer {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 250px;
+}
+
+#mainInput {
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: medium;
+    text-align: center;
+}
+
+.menuItem {
+    border: #FFF solid 1px;
+    background-color: #3088C7;
+    text-align: center;
+    margin-top: 10px;
+    float: left;
+    width: 24%;
+    position: relative;
+    z-index: 1;
+}
+
+.menuItem:hover {
+    background-color: #FFF;
+    text-decoration-line: underline;
+    border-color: #1C4E73;
+}
+
+.menuItemLink {
+    padding: 8px;
+    font-family: Calibri, sans-serif;
+    text-decoration: none;
+    display: block;
+    color: #FFF;
+}
+
+.menuItemLink:hover {
+    color: #3088C7;
+}
+
+#navigationList {
+    margin-bottom: 5%;
+    clear: left;
+    list-style-type: none;
+}
+
+#notActiveAuthLink {
+    text-decoration: none;
+    cursor: default;
+}
+
+#upperContainer {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 70px;
+}
+

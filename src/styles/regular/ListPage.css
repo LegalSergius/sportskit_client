@@ -1,0 +1,177 @@
+.bottomContainer {
+    position: sticky;
+    margin-top: 1%;
+    bottom: -10%;
+}
+
+.bottomContainerBlur {
+    z-index: -1;
+}
+
+.currentPaginationButton {
+    outline: #000 solid 2px;
+    border-width: 2px;
+    background-color: #FFF;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+}
+
+#desktopBottomContainer {
+    width: 70%;
+    left: 15%;
+}
+
+#desktopSortingContainer {
+    text-align: center;
+}
+
+.enumeration {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #FFF;
+}
+
+.enumeration:hover {
+    text-decoration-color: #FFF;
+}
+
+.headingItemContainer {
+    border: #00FF00 solid 1px;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: center;
+    width: 25%;
+}
+
+#listPageContainer {
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+}
+
+#listPageHeader {
+    font-size: x-large;
+}
+
+.listPageRadios {
+    display: block;
+    margin: 3px 1px;
+    cursor: pointer;
+}
+
+.listPageRadios:hover {
+    border: #000 solid 1px;
+}
+
+#mobileListPageHeader {
+    display: block;
+    width: 45%;
+    margin: auto;
+    font-size: x-large;
+    text-align: center;
+}
+
+#mobileBottomContainer {
+    width: 95%;
+    left: 2.5%;
+}
+
+.mobileHeadingItemContainer {
+    border: #0000FF solid 1px;
+    display: inline-block;
+    width: 50%;
+    margin: auto;
+}
+
+#mobileSortingContainer {
+    display: flex;
+    flex-direction: column-reverse;
+    font-size: large;
+    text-align: center;
+}
+
+.paginationArrowButtons {
+    background-color: #FFF;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.paginationButtons {
+    background-color: #FFF;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+}
+
+#paginationContainer {
+    width: max-content;
+    margin: auto;
+}
+
+.paginationSpan {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.photos {
+    background-color: #FFF;
+    display: block;
+    border: #000 solid 1px;
+    width: 200px;
+    height: 200px;
+    margin: auto;
+}
+
+#productsContainer {
+    margin-left: 3%;
+}
+
+#promotionRadioButton {
+    text-align: center;
+}
+
+.promotionSpan {
+    color: #FF0000;
+}
+
+#showBasketPage {
+    border-radius: 5px;
+    background-color: #0000FF;
+    margin-left: 8%;
+    padding: 10px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+#showBasketPage:hover {
+    background-color: #3088C7;
+}
+
+.sortingContainer {
+    background-color: #3077A6;
+    border: #000 solid 1px;
+    color: #FFF;
+    margin-top: 5px;
+}
+
+.sortingSpan, .selectedSpan {
+    display: inline-block;
+    margin: 2% 5%;
+}
+
+.sortingSpan:hover, .selectedSpan {
+    color: #DC143C;
+    text-decoration: #DC143C dotted underline;
+}
+
+.sortingSpan:hover, .selectedSpan:hover {
+    cursor: pointer;
+}
+
+.selectedSpan:hover, .sortingSpan {
+    color: #FFF;
+    text-decoration: #FFF dotted underline;
+}
+

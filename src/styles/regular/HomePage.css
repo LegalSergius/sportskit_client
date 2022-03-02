@@ -1,0 +1,87 @@
+.addedItemsHeader {
+    margin-left: 2%;
+    font-weight: normal;
+    font-size: xx-large;
+}
+
+#bestSellersHeader {
+    color: #8B0000;
+}
+
+.headerSpace {
+    background-color: #61DAFB;
+}
+
+.homePageLinksContainer {
+    text-align: center;
+}
+
+#latestProductsImages {
+    width: 200px;
+    height: 200px;
+}
+
+#mainPageAnnouncements {
+    width: 19%;
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+.mainPageProductsContainerChild {
+    display: block;
+    border-top: #000 solid 1px;
+    box-sizing: border-box;
+    color: #000;
+    font-size: x-large;
+    cursor: pointer;
+}
+
+.mainPageProductsContainerChild:hover, .mainPageProductsContainerChild:focus {
+    background-color: #DCDCDC;
+}
+
+.mobileHomePageLinksContainer {
+    box-sizing: border-box;
+}
+
+#mobileLatestProductsImages {
+    height: 100px;
+}
+
+#mobileMainPageAnnouncements {
+    width: 30%;
+    margin: 3px;
+    font-size: small;
+}
+
+.newProductsItem {
+    display: inline-block;
+    vertical-align: middle;
+    width: 33%;
+    text-align: center;
+    margin: 0 1px;
+    padding: 10px 0;
+    word-break: break-all;
+}
+
+.productPicture {
+    display: block;
+    border: #000 solid 1px;
+    margin: 5px auto;
+}
+
+#sortedProductsContainer {
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+}
+
+#userName {
+    margin: 1%;
+    display: block;
+    text-align: center;
+    font-family: Calibri, sans-serif;
+    font-size: xx-large;
+}
+
+
+

@@ -1,0 +1,73 @@
+.mobilePaymentButton {
+    display: inline-block;
+    margin: 0 1.25%;
+    padding: 0 1px;
+    border: none;
+    width: 47.5%;
+    border-radius: 10px/5px;
+    background-color: #3088c7;
+    color: #FFF;
+    box-sizing: border-box;
+    font-size: x-large;
+    vertical-align: middle;
+}
+
+#mobileProductContainer {
+    margin-top: 2%;
+    font-family: Calibri, sans-serif;
+}
+
+#mobileProductDescription {
+    margin-left: 5%;
+}
+
+#mobileProductImage {
+    border: #777 solid 1px;
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 1%;
+    width: 75%;
+    height: 98%;
+}
+
+#mobileProductImageContainer {
+    box-sizing: border-box;
+    height: 300px;
+    text-align: center;
+}
+
+#mobileProductInformationContainer {
+    margin-top: 3%;
+}
+
+#mobileProductInformationContainer *:not(hr) {
+    margin-left: 3%;
+    font-size: x-large;
+}
+
+#mobileProductPagePaymentContainer {
+    margin-top: 5%;
+    text-align: center;
+}
+
+#mobileProductPagePrice {
+    margin: 0 2%;
+}
+
+.mobileProductPageSwitchButtons {
+    border: #000 solid 1px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 11%;
+    margin-top: 1px;
+    height: 50px;
+}
+
+#mobileProductSwitchLeft {
+    float: left;
+}
+
+#mobileProductSwitchRight {
+    float: right;
+}

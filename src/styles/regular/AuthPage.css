@@ -1,0 +1,43 @@
+.authorizationButtons {
+    display: block;
+    margin: 20px 0;
+    padding: 10px 0;
+    width: 100%;
+    background-color: #0000FF;
+    border: #000 solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.authorizationButtons:hover {
+    background-color: #483D8B;
+    text-decoration: underline;
+}
+
+.buttonsContainer {
+    font-family: Calibri, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#desktopButtonsContainer {
+    width: 25%;
+    margin: 10% auto;
+    font-size: x-large;
+}
+
+#mobileButtonsContainer {
+    width: 200px;
+    margin: 30px auto;
+    font-size: medium;
+}
+
+#dividerImage {
+    width: 80%;
+}

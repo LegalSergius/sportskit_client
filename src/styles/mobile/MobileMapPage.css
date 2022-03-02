@@ -1,0 +1,30 @@
+#mobileCloseWindow {
+    border: #000 solid 1px;
+    display: block;
+    margin: auto;
+}
+
+#mobileInfoWindow {
+    border: #000 solid 1px;
+    background-color: #FFF;
+    font-size: small;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    z-index: 1;
+    line-height: 20px;
+    margin: auto;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1000px rgba(200, 200, 200, 0.7);
+    transition: 0.3s;
+    text-align: center;
+}
+
+#mobileMapContainer {
+    border: #000 solid 1px;
+    margin-top: 1%;
+    width: 100%;
+}
+
+

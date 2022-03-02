@@ -1,0 +1,21 @@
+#headerForRegistration {
+    text-align: center;
+    font-size: 3em;
+    display: block;
+}
+
+#initialsInputsContainer {
+    margin: 0 4%;
+    text-align: center;
+}
+
+#prompt {
+    font-family: Calibri, sans-serif;
+    font-size: larger;
+    text-align: center;
+}
+
+#registrationSubmit {
+    display: block;
+    margin: 1% auto;
+}

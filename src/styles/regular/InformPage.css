@@ -1,0 +1,86 @@
+#commonContainer {
+    width: 90%;
+    margin: auto;
+}
+
+#currentImage {
+    display: inline-block;
+    vertical-align: middle;
+
+}
+
+#imageSwitcher {
+    width: max-content;
+    margin: auto;
+}
+
+#imageSwitcherSelector {
+    display: block;
+    text-align: center;
+}
+
+#leftButton {
+    left: 0;
+}
+
+#mobileCommonContainer {
+    width: 95%;
+    margin: auto;
+    font-size: medium;
+}
+
+#mobileCurrentImage {
+    width: 100%;
+}
+
+#mobileCurrentImage, #currentImage {
+    border: #000 solid 1px;
+
+}
+
+#mobileDescription {
+    font-size: x-large;
+}
+
+#mobileDescription, #description {
+    text-align: justify;
+}
+
+#mobileIllustrationTitle {
+    font-size: x-large;
+}
+
+.mobileImageSwitcher {
+    position: relative;
+}
+
+.mobileImageSwitcherBlur {
+    z-index: -1;
+}
+
+.mobileSelectButtons {
+    position: absolute;
+}
+
+.mobileSelectButtons, .selectButtons {
+    background-color: #FFF;
+    cursor: pointer;
+}
+
+.mobileSelectButtons:active, .selectButtons:active {
+    border: #0000FF solid 3px;
+}
+
+.mobileSelectButtonsImage {
+    width: 20px;
+    height: 50px;
+}
+
+#rightButton {
+    right: 0;
+}
+
+#rightButton, #leftButton {
+    top: 30%;
+}
+

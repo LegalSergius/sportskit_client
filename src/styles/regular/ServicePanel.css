@@ -1,0 +1,95 @@
+.adminButtons {
+    display: inline-block;
+    margin: 1% 3%;
+    width: 15%;
+    height: 100px;
+    vertical-align: middle;
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+    background-color: #FFF;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.adminButtons:hover {
+    background-color: #DCDCDC;
+}
+
+#adminButtonsContainer {
+    border: #7108FF solid 1px;
+    width: 90%;
+    margin: 0 5%;
+    text-align: center;
+    border-bottom: #000 solid 2px;
+}
+
+.announcementSpan {
+    display: inline-block;
+    text-align: center;
+}
+
+.announcementTextInformation {
+    text-align: center;
+    font-size: large;
+}
+
+#downloadableInformationContainer {
+    font-family: Calibri, sans-serif;
+    font-size: x-large;
+    margin-left: 5%;
+}
+
+#deleteProductButton {
+    clear: top;
+}
+
+.information {
+    display: block;
+    margin-top: 2%;
+}
+
+.mobileAdminButtons {
+    width: 100%;
+    margin-top: 1%;
+}
+
+.mobileNewAnnouncementsContainer {
+    border: #000 solid 1px;
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+    margin: 2.5%;
+    color: #000;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.mobileNewAnnouncementPicture {
+    border: #CCC solid 1px;
+    width: 95%;
+    height: 150px;
+}
+
+.newAnnouncementPicture {
+    display: inline-block;
+    float: left;
+    width: 150px;
+    height: 150px;
+    vertical-align: middle;
+    border: #000 solid 1px;
+}
+
+.newAnnouncementsContainer {
+    display: inline-block;
+    border: #000 solid 1px;
+    margin-top: 2%;
+    margin-right: 3%;
+    padding: 1%;
+    color: #000;
+    box-sizing: border-box;
+    width: 30%;
+}
+
+.newAnnouncementsContainer:hover {
+    background-color: #DCDCDC;
+}

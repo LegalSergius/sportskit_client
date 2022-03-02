@@ -1,0 +1,33 @@
+#AdminSelectHomePageLink {
+    margin-left: 4%;
+}
+
+#divider {
+    display: block;
+    margin: auto;
+    width: 80%;
+}
+
+#forgotPassword {
+    display: inline;
+}
+
+#headerForEnter {
+    text-align: center;
+    font-size: 3em;
+    display: block;
+}
+
+#toRegistrationLink {
+    display: block;
+    margin-top: 5%;
+}
+
+#UserPasswordState {
+    margin-left: 8%;
+}
+
+#UserSelectHomePageLink {
+    display: inline;
+}
+

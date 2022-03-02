@@ -1,0 +1,149 @@
+.mobileButtonHamburger, .mobileButtonHamburger::before, .mobileButtonHamburger::after {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    margin-left: -10px;
+    margin-top: -1px;
+    background-color: #FFF;
+}
+
+.mobileButtonHamburger::before, .mobileButtonHamburger::after {
+    content: '';
+}
+
+.mobileButtonHamburger::before {
+    transform: translateY(-5px);
+}
+
+.mobileButtonHamburger::after {
+    transform: translateY(5px);
+}
+
+.mobileButtonHamburgerActive {
+    transition: 0.3s;
+    height: 0;
+}
+
+.mobileButtonHamburgerActive::before {
+    transform: rotate(45deg);
+}
+
+.mobileButtonHamburgerActive::after {
+    transform: rotate(-45deg);
+}
+
+.mobileExpandableLink {
+    border-right: #FFF solid 2px;
+    padding: 0 8px;
+}
+
+.mobileListTumbler {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: x-large;
+}
+
+.mobileListTumblerActive {
+   transform: rotate(180deg);
+}
+
+.mobileCatalogAndPromotionList {
+    text-align: center;
+    list-style-type: disc;
+}
+
+.mobileCatalogListLinks {
+    color: #FFF;
+    display: list-item;
+    text-decoration: none;
+    margin: 3% 0;
+    padding: 0 2%;
+}
+
+#mobileHeaderContainer {
+    background-color: #FFF;
+    border-bottom: #A9A9A9 solid 1px;
+    position: sticky;
+    left: 0;
+    top: 0;
+    right: 0;
+    font-size: small;
+    font-family: Calibri, sans-serif;
+}
+
+#mobileHeaderContainerChild {
+    display: inline-block;
+    margin: 2% 1%;
+    width: 60%;
+    border: #000 solid 1px;
+}
+
+#mobileInputAndListContainer {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.mobileListItem {
+    display: block;
+    border: #000 solid 1px;
+    background-color: #FFF;
+}
+
+#mobileLogotypeContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: -20px;
+}
+
+#mobileMainInput {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#mobileNavigationButton {
+    width: 35px;
+    height: 35px;
+    position: relative;
+    top: 5px;
+    left: -40px;
+    border: #555 solid 1px;
+    border-radius: 40%;
+    background-color: #3088C7;
+}
+
+.mobileNavigation {
+    border: #000 solid 1px;
+    background-color: #3088C7;
+    color: #FFF;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    transition: 0.5s;
+    border-radius: 10px;
+    transform: translateX(100%);
+}
+
+.mobileNavigationActive {
+    transform: translateX(0%);
+}
+
+.mobileNavigationLinks {
+    color: #FFF;
+    text-decoration: none;
+    font-size: larger;
+}
+
+.mobileNavigationList {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 80%;
+    overflow: auto;
+}
