@@ -141,7 +141,6 @@ export default class ListPage extends React.Component {
     }
 
     showNewPage(number) {
-        console.log('page - ' + number);
         if (number > this.pageCount) {
             number = 1;
         } else if (number === 0) {

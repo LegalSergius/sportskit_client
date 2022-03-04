@@ -5,8 +5,8 @@ export function PaginationContainer({showNewPage, pageCount, page}) {
     let pageNumbersArray = [];
 
     if (pageCount < 6) {
-        for (let i = 1; i <= pageCount; i++) {
-            pageNumbersArray.push(i);
+        for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
+            pageNumbersArray.push(pageNumber);
         }
     } else {
         const STARTING_INDEX = 1, FINISHING_INDEX = pageCount;
@@ -43,13 +43,15 @@ export function PaginationContainer({showNewPage, pageCount, page}) {
                     <button
                         className={(element === page)? "currentPaginationButton" :
                             (element === '...')? "enumeration" : "paginationButtons"}
+                        key={element}
                         onClick={() => showNewPage(element)}>
                             <span
                                 id={element}
                                 className="paginationSpan">
                                 {element}
                             </span>
-                    </button> )}
+                    </button> )
+            }
             {pageCount > 1 &&
                 <button
                     className="paginationArrowButtons"

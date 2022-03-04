@@ -145,7 +145,6 @@
 }
 
 .mobileAuthorizationContainer {
-    border: #00FF00 solid 1px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -186,6 +185,7 @@
     display: block;
     border: #000 solid 1px;
     width: 75%;
+    height: 100px;
     margin: auto;
 }
 

@@ -6,10 +6,10 @@
 #currentImage {
     display: inline-block;
     vertical-align: middle;
-
 }
 
 #imageSwitcher {
+    background: #F00;
     width: max-content;
     margin: auto;
 }
@@ -35,7 +35,6 @@
 
 #mobileCurrentImage, #currentImage {
     border: #000 solid 1px;
-
 }
 
 #mobileDescription {
