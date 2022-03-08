@@ -95,6 +95,7 @@ export default class ForgotPasswordPage extends React.Component {
         document.title = "Обновление пароля | Sports Kit";
         const showOrHidePassword = (this.state.passwordVisibility) ? 'Скрыть пароль' : 'Показать пароль';
         const passwordType = (this.state.passwordVisibility) ? 'text': 'password';
+        const IS_MOBILE = this.props.history.location?.state?.isMobile;
 
         return (
             <>
@@ -106,7 +107,7 @@ export default class ForgotPasswordPage extends React.Component {
                         Введите Email или номер телефона Вашей учетной записи, к которой
                         Вы хотите изменить пароль:
                         <input
-                            className={styles.forgottenPasswordInputs}
+                            className={IS_MOBILE? "mobileForgottenPasswordInputs" : "forgottenPasswordInputs"}
                             type="text"
                             name="emailOrPhone"
                             onChange={(event) => this.setInputValue(event)}
@@ -130,7 +131,7 @@ export default class ForgotPasswordPage extends React.Component {
                             Для подтверждения владения Вами учетной записью мы выслали шестизначный код.
                             Пожалуйста, введитe его ниже:
                             <input
-                                className={styles.forgottenPasswordInputs}
+                                className={IS_MOBILE? "mobileForgottenPasswordInputs" : "forgottenPasswordInputs"}
                                 type="text"
                                 name="validationCode"
                                 onChange={(event) => this.setInputValue(event)}
@@ -155,7 +156,7 @@ export default class ForgotPasswordPage extends React.Component {
                         <label>
                             Введите Ваш новый пароль:
                             <input
-                                className={styles.forgottenPasswordInputs}
+                                className={IS_MOBILE? "mobileForgottenPasswordInputs" : "forgottenPasswordInputs"}
                                 type={passwordType}
                                 name="password"
                                 onChange={(event) => this.setInputValue(event)}
@@ -172,6 +173,7 @@ export default class ForgotPasswordPage extends React.Component {
                     {this.state.step3 &&
                         <>
                             <span
+                                id="forgottenPasswordVisibility"
                                 className={styles.authorizationLinks}
                                 onClick={this.changePasswordVisibility}>
                                 {showOrHidePassword}

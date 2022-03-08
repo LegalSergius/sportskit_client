@@ -2,9 +2,9 @@ import styles from "../../styles/index.module.css";
 import React from 'react';
 import '../../styles/regular/ServicePanel.css'
 import {Link} from "react-router-dom";
-import {ADD_PAGE, EDIT_PAGE, PRODUCT_PAGE} from "../../routing/routing_consts";
+import {ADD_PAGE, EDIT_PAGE, PRODUCT_PAGE, SERVICE_PANEL} from "../../routing/routing_consts";
 import {get} from "../../httpTasks/tasks/ProductAPITasks";
-import {getAPI, getFile} from "../../utils/ComponentUtils";
+import {getAPI, getFile, linkObject} from "../../utils/ComponentUtils";
 
 export default class ServicePanel extends React.Component {
     constructor(props) {
@@ -52,21 +52,21 @@ export default class ServicePanel extends React.Component {
                     <button className={IS_MOBILE? "mobileAdminButtons" : "adminButtons"}>
                         <Link
                             className={styles.authorizationLinks}
-                            to={{pathname: ADD_PAGE + '/newProduct'}}>
+                            to={linkObject(ADD_PAGE + '/newProduct', true)}>
                             Добавить товар
                         </Link>
                     </button>
                     <button className={IS_MOBILE? "mobileAdminButtons" : "adminButtons"}>
                         <Link
                             className={styles.authorizationLinks}
-                            to={{pathname: ADD_PAGE + '/newPromotion'}}>
+                            to={linkObject(ADD_PAGE + '/newPromotion', true)}>
                             Добавить акцию на товар
                         </Link>
                     </button>
                     <button className={IS_MOBILE? "mobileAdminButtons" : "adminButtons"}>
                         <Link
                             className={styles.authorizationLinks}
-                            to={{pathname: ADD_PAGE + '/newPromo'}}>
+                            to={linkObject(ADD_PAGE + '/newPromo', true)}>
                             Добавить акционный промо-код
                         </Link>
                     </button>

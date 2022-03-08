@@ -125,7 +125,6 @@ export default class AddPage extends React.Component {
         }
 
         this.displayClearButton();
-        currentPhotoIndex = undefined;
         this.setState({editablePhotoIndex: null, isClickedOnPhoto: false});
 
     }
@@ -212,7 +211,8 @@ export default class AddPage extends React.Component {
     }
 
     clearPhoto(photoIndex) {
-        let images = document.getElementsByClassName('productPhoto');
+        let images = document.getElementsByClassName('productPhoto')
+            ?? document.getElementsByClassName('mobileProductPhoto');
         images[photoIndex].src = "../../static/add_picture.png";
 
         this.displayClearButton();
@@ -244,9 +244,14 @@ export default class AddPage extends React.Component {
         const photosTitle = this.state.isNewProduct? 'Добавьте несколько фотографий: ' : 'Фотографии товара: ';
         const currentObject = this;
 
+        const IS_MOBILE = this.props.history.location?.state?.isMobile;
+        console.log(`isMobile - ${IS_MOBILE}`);
+
         return (
             <div id="addPageContainer">
-                <h2 className={styles.commonFont}>
+                <h2
+                    id={IS_MOBILE? "addPageMobileHeader" : ""}
+                    className={styles.commonFont}>
                     {this.state.header}
                 </h2>
                 <div>
@@ -279,7 +284,7 @@ export default class AddPage extends React.Component {
                         {!this.state.isNewPromoCode &&
                             <label className="addPageLabels">
                                 {this.state.nameOfNewElement}
-                                <div id="addPromotionContainer">
+                                <div id={IS_MOBILE? "mobileAddPromotionContainer" : "addPromotionContainer"}>
                                     <input
                                         id="productNameInput"
                                         type="text"
@@ -314,7 +319,7 @@ export default class AddPage extends React.Component {
                             <label className="addPageLabels">
                                 Описание товара:
                                 <textarea
-                                    id="addPageTextarea"
+                                    id={IS_MOBILE? "mobileAddPageTextArea" : "addPageTextarea"}
                                     value={this.state.textareaValue}
                                     onChange={(event) => this.setInputValue(event, 'textarea')}/>
                             </label> }
@@ -333,7 +338,7 @@ export default class AddPage extends React.Component {
                         <label className="addPageLabels">
                             {this.state.priceOrNumberValue}
                             <input
-                                id="priceInput"
+                                id={IS_MOBILE? "mobilePriceInput" : "priceInput"}
                                 type="number"
                                 onChange={(event) => this.setInputValue(event, 'input')}
                                 value={this.state.price}
@@ -347,7 +352,7 @@ export default class AddPage extends React.Component {
                             <label
                                 id="addPhotoLabel"
                                 className="addPageLabels"
-                                for="fileChoice">
+                                htmlFor="fileChoice">
                                 {photosTitle}
                             </label>
                             <input
@@ -357,7 +362,7 @@ export default class AddPage extends React.Component {
                                 accept=".jpg, .jpeg, .png"
                                 multiple />
                             <div id="photosContainer">
-                                <div className="photosContainerChild">
+                                <div className={IS_MOBILE? "mobilePhotosContainerChild" : "photosContainerChild"}>
                                     <img
                                         className="productPhoto"
                                         src="../../static/add_picture.png"
@@ -370,7 +375,7 @@ export default class AddPage extends React.Component {
                                         &times;
                                     </span>
                                 </div>
-                                <div className="photosContainerChild">
+                                <div className={IS_MOBILE? "mobilePhotosContainerChild" : "photosContainerChild"}>
                                     <img
                                         className="productPhoto"
                                         src="../../static/add_picture.png"
@@ -383,7 +388,7 @@ export default class AddPage extends React.Component {
                                         &times;
                                     </span>
                                 </div>
-                                <div className="photosContainerChild">
+                                <div className={IS_MOBILE? "mobilePhotosContainerChild" : "photosContainerChild"}>
                                     <img
                                         className="productPhoto"
                                         src="../../static/add_picture.png"

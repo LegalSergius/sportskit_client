@@ -106,15 +106,6 @@
     display: block;
 }
 
-.forgottenPasswordInputs {
-    display: block;
-    text-align: center;
-    margin: 1% 35%;
-    width: 400px;
-    height: 50px;
-    font-size: large;
-}
-
 .header {
     color: #000;
     font-family: Calibri, cursive;

@@ -5,6 +5,7 @@ import '../../styles/regular/RegistrationPage.css';
 import {Link} from "react-router-dom";
 import {ENTER_PAGE, FORGOT_PASSWORD_PAGE, HOME_PAGE, REGISTRATION_PAGE} from "../../routing/routing_consts";
 import {isUserByURLLocation} from "../../utils/AuthorizationUtils";
+import {linkObject} from "../../utils/ComponentUtils";
 
 export class AuthLinksContainer extends React.Component {
     constructor(props) {
@@ -33,7 +34,7 @@ export class AuthLinksContainer extends React.Component {
                 {IS_LOGIN && this.state.isUser &&
                     <Link
                         id="forgotPassword"
-                        to={FORGOT_PASSWORD_PAGE}
+                        to={linkObject(FORGOT_PASSWORD_PAGE, IS_MOBILE)}
                         className={LINK_CLASS}>
                         Забыли пароль?
                     </Link> }

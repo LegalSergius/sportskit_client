@@ -188,7 +188,7 @@ export default class EditPage extends React.Component {
             const RESPONSE_OBJECT = this.state.responseObject;
             return <Redirect to={{
                 pathname: ADD_PAGE + '/updateProduct',
-                state: {object: RESPONSE_OBJECT}
+                state: {object: RESPONSE_OBJECT, isMobile: true}
             }} />
         } else if (this.state.completed) {
             return <Redirect to={SERVICE_PANEL} />
