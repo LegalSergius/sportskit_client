@@ -4,8 +4,11 @@ import {checkTokenValidity} from "../../httpTasks/tasks/AuthAPITasks";
 import {fillArray, get} from "../../httpTasks/tasks/ProductAPITasks";
 import {getAPI} from "../../utils/ComponentUtils";
 import {ArrayListComponent} from "./ArrayListComponent";
+import {StateContext} from "../../contexts";
 
 export default class HomePage extends React.Component {
+    static contextType = StateContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -61,11 +64,6 @@ export default class HomePage extends React.Component {
             });
     }
 
-    componentWillUnmount() {
-        this.newProductsMediaArray = null;
-        this.popularProductsMediaArray = null;
-    }
-
     render() {
         document.title = "Главная страница | Sports Kit";
 
@@ -79,13 +77,13 @@ export default class HomePage extends React.Component {
                     <h1 className="addedItemsHeader">
                         Недавно добавленные товары
                     </h1>
-                    <div className={true? "mobileHomePageLinksContainer": "homePageLinksContainer"}>
+                    <div className={this.context.isMobile? "mobileHomePageLinksContainer": "homePageLinksContainer"}>
                         <ArrayListComponent
-                            isMobile={true}
+                            isMobile={this.context.isMobile}
                             productsArray={this.state.newProductsArray}
                             productsMediaArray={this.newProductsMediaArray}
-                            linkId={true? "mobileMainPageAnnouncements": "mainPageAnnouncements"}
-                            imageId={true? "mobileLatestProductsImages" : "latestProductsImages"}/>
+                            linkId={this.context.isMobile? "mobileMainPageAnnouncements": "mainPageAnnouncements"}
+                            imageId={this.context.isMobile? "mobileLatestProductsImages" : "latestProductsImages"}/>
                     </div>
                     <h1
                         id="bestSellersHeader"
@@ -94,7 +92,7 @@ export default class HomePage extends React.Component {
                     </h1>
                     <div className="homePageLinksContainer">
                         <ArrayListComponent
-                            isMobile={true}
+                            isMobile={this.context.isMobile}
                             productsArray={this.state.popularProductsArray}
                             productsMediaArray={this.popularProductsMediaArray}
                             showCountOfSales />
