@@ -45,7 +45,7 @@ export default class LoginPage extends React.Component {
     }
 
     async handleSubmit(event) {
-        const NEW_STATE = await submit(event,  getAPI('auth/login?parameter=' +
+        const NEW_STATE = await submit(event, getAPI('auth/login?parameter=' +
             ((this.isUser)? 'USER' : 'ADMIN')), this.state.emailOrPhone, this.state.password);
 
         this.setState(NEW_STATE);

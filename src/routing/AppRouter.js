@@ -4,8 +4,10 @@ import {
     ADD_PAGE, AUTH_PAGE, CATALOG, EDIT_PAGE, ENTER_PAGE, FORGOT_PASSWORD_PAGE, PRODUCT_PAGE,
     HOME_PAGE, INFORMATION_PAGE, MAP_PAGE, LIST_PAGE, REGISTRATION_PAGE, SERVICE_PANEL, BASKET_PAGE
 } from "./routing_consts";
-import {StateContext} from "../contexts";
+import {LoginContext, StateContext} from "../contexts";
 import MediaQuery, {useMediaQuery} from "react-responsive";
+import {checkTokenValidity} from "../httpTasks/tasks/AuthAPITasks";
+import {getAPI} from "../utils/ComponentUtils";
 
 const App = React.lazy(() => import('../components/special/HomePage'));
 const InformationPage = React.lazy(() => import('../components/special/InformationPage'));
@@ -38,14 +40,24 @@ export const Navigation = ({exact, path, component: Component}) => (
 
 function AppRouter() {
     const [isMobile, setIsMobile] = useState(false);
+    const [authState, setAuthState] = useState({auth: false, userName: '', userRole: ''});
     const isMobileDevice = useMediaQuery({maxWidth: 992});
 
     useEffect(() => {
         setIsMobile(isMobileDevice);
     });
+    useEffect(async() => {
+        const token = localStorage.getItem('token');
+
+        await checkTokenValidity(getAPI('auth/check'), token).then((decodedToken) => {
+            if (decodedToken) {
+                setAuthState({auth: true, userName: decodedToken.name, userRole: decodedToken.role});
+            }
+        });
+    })
 
     return (
-        <StateContext.Provider value={{isMobile}}>
+        <StateContext.Provider value={{isMobile, authState}}>
             <Suspense fallback={<div>Загрузка...</div>}>
                 <Switch>
                    <Navigation

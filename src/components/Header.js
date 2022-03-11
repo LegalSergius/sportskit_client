@@ -14,8 +14,11 @@ import {Logotype} from "./special/Logotype";
 import {NavigationInput} from "./special/NavigationInput";
 import {NavigationMenu} from "./special/NavigationMenu";
 import {getCurrentProducts} from "../utils/ProductUtil";
+import {StateContext} from "../contexts";
 
 export default class Header extends React.Component {
+    static contextType = StateContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -48,12 +51,12 @@ export default class Header extends React.Component {
         const TOKEN = localStorage.getItem('token');
         let dataArray, isAuth = false, userRole;
 
-        checkToken(TOKEN).then((decodedToken) => {
+        /*checkToken(TOKEN).then((decodedToken) => {
             if (decodedToken) {
                 isAuth = true;
                 userRole = decodedToken.role;
             }
-        });
+        });*/
 
         /*const response = async() => {
             return await get(getAPI('products/getProducts?mediaRequired=' + false));

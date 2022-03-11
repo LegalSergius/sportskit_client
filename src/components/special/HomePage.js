@@ -4,7 +4,7 @@ import {checkTokenValidity} from "../../httpTasks/tasks/AuthAPITasks";
 import {fillArray, get} from "../../httpTasks/tasks/ProductAPITasks";
 import {getAPI} from "../../utils/ComponentUtils";
 import {ArrayListComponent} from "./ArrayListComponent";
-import {StateContext} from "../../contexts";
+import {LoginContext, StateContext} from "../../contexts";
 
 export default class HomePage extends React.Component {
     static contextType = StateContext;
@@ -37,14 +37,14 @@ export default class HomePage extends React.Component {
         //this.textInput = document.getElementById('mainInput');
         let newProducts = [], popularProducts = [];
 
-        const checkToken = async() => {
+      /*  const checkToken = async() => {
             return await checkTokenValidity(getAPI('auth/check'), TOKEN);
         }
         checkToken().then((decodedToken) => {
             if (decodedToken) {
                 this.setState({isAuth: true, userName: decodedToken.name});
             }
-        });
+        });*/
         const response = async() => {
             return await get(getAPI('products/getProducts?mediaRequired=' + false));
         };
@@ -69,9 +69,10 @@ export default class HomePage extends React.Component {
 
         return (
             <>
-                {this.state.isAuth &&
+                {//this.state.isAuth  &&
+                    this.context.authState.auth &&
                     <span id="userName">
-                        Здравствуйте, мы рады Вас видеть, {this.state.userName}!
+                        Здравствуйте, мы рады Вас видеть, {this.context.authState.userName}!
                     </span> }
                 <div id="sortedProductsContainer">
                     <h1 className="addedItemsHeader">
