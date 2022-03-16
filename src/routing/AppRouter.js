@@ -57,7 +57,7 @@ function AppRouter() {
     })
 
     return (
-        <StateContext.Provider value={{isMobile, authState}}>
+        <StateContext.Provider value={{isMobile, authState, setAuthState}}>
             <Suspense fallback={<div>Загрузка...</div>}>
                 <Switch>
                    <Navigation

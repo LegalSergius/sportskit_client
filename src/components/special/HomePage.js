@@ -110,6 +110,7 @@ export default function HomePage() {
     const [arrayGroup, setArrayGroup] = useState({newProducts: [], newProductsMedia: [],
         popularProducts: [], popularProductsMedia: []});
 
+
     useEffect(async() => {
         //const token = localStorage.getItem('token');
         //this.textInput = document.getElementById('mainInput');
@@ -139,6 +140,8 @@ export default function HomePage() {
                 });
         });
     });
+
+    document.title = "Главная страница | Sports Kit";
 
     return (
         <>
@@ -175,5 +178,7 @@ export default function HomePage() {
         </>
     );
 }
+
+
 
 

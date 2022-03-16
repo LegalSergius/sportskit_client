@@ -44,7 +44,8 @@ export function submitResponse(event, inputValue) {
             true).then((response) => {
                 if (response.dataValues) {
                     console.log(`response - ${JSON.stringify(response.dataValues)}`);
-                    return {responseObject: response, redirected: true};
+
+                    return {responseObject: response, isRedirected: true};
                 }
             }
         );

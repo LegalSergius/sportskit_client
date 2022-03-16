@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styles from "../styles/index.module.css";
 import {getAPI, handleInputKeyDown, handleListItemKeyDown, linkObject, submitResponse} from "../utils/ComponentUtils";
 import {Link, Redirect} from "react-router-dom";
@@ -15,7 +15,7 @@ import {NavigationInput} from "./special/NavigationInput";
 import {NavigationMenu} from "./special/NavigationMenu";
 import {getCurrentProducts} from "../utils/ProductUtil";
 import {StateContext} from "../contexts";
-
+/*
 export default class Header extends React.Component {
     static contextType = StateContext;
 
@@ -33,7 +33,7 @@ export default class Header extends React.Component {
             responseObject: null
         };
 
-       // this.responseObject = null;
+       this.responseObject = null;
 
         this.submitResponse = this.submitResponse.bind(this);
         this.showList = this.showList.bind(this);
@@ -51,12 +51,12 @@ export default class Header extends React.Component {
         const TOKEN = localStorage.getItem('token');
         let dataArray, isAuth = false, userRole;
 
-        /*checkToken(TOKEN).then((decodedToken) => {
+        checkToken(TOKEN).then((decodedToken) => {
             if (decodedToken) {
                 isAuth = true;
                 userRole = decodedToken.role;
             }
-        });*/
+        });
 
         /*const response = async() => {
             return await get(getAPI('products/getProducts?mediaRequired=' + false));
@@ -65,7 +65,7 @@ export default class Header extends React.Component {
             dataArray = await fillArray(result);
             this.setState({dataArray, isAuth, userRole});
             })
-        );*/
+        );
         getCurrentProducts().then(async(result) => {
             dataArray = await fillArray(result);
             this.setState({dataArray, isAuth, userRole});
@@ -153,12 +153,12 @@ export default class Header extends React.Component {
                                     <Logotype />
                                     <div id="headerContainersChild">
                                         <NavigationInput
-                                            propsSubmit={/*(event, inputValue) => {
+                                            propsSubmit={(event, inputValue) => {
                                                 submitResponse(event, inputValue).then((result) => {
                                                     console.log(`result - ${JSON.stringify(result)}`);
                                                     this.setState(result);
-                                                }*/
-                                                this.submitResponse
+                                                }
+                                               this.submitResponse
                                             }
                                             dataArray={this.state.dataArray} />
                                     </div>
@@ -316,4 +316,273 @@ export default class Header extends React.Component {
             </>
         )
     }
+}*/
+
+const LIST_FLAGS = {isAuthorizationListShown: 0x3, isCatalogShown: 0x1, isSharesListShown: 0x2};
+
+export default function Header() {
+    const contextState = useContext(StateContext);
+    const [dataList, setDataList] = useState([]);
+    const [overrideState, setOverrideState] = useState({responseObject: null, isRedirected: false});
+    const [flagState, setFlagState] = useState(0);
+
+    useEffect(async() => {
+        fixEnter();
+        window.onbeforeunload = function () {
+            fixExit();
+            return '';
+        }
+
+        getCurrentProducts().then(async(result) => {
+            let dataList = await fillArray(result);
+            setDataList(dataList);
+        });
+    });
+
+    if (overrideState.isRedirected) {
+        return (
+            <>
+                <Header />
+                <Redirect to={PRODUCT_PAGE + '/' + overrideState.responseObject.dataValues.id}/>
+            </>);
+    }
+
+    console.log(`авторизация - ${flagState & LIST_FLAGS.isAuthorizationListShown}, список - 
+                    ${flagState & LIST_FLAGS.isSharesListShown}, каталог - ${flagState & LIST_FLAGS.isCatalogShown}`);
+
+    return (
+        <>
+            {contextState.isMobile
+                ?
+                <MobileHeader/>
+                :
+                <div id="container">
+                    <div id="upperContainer">
+                        <Logotype />
+                        <div id="headerContainersChild">
+                            <NavigationInput
+                                propsSubmit={(event, inputValue) => {
+                                    submitResponse(event, inputValue).then((result) => {
+                                        console.log(`result - ${JSON.stringify(result)}`);
+                                        setOverrideState(result);
+                                        });
+                                    }
+                                }
+                                dataArray={dataList} />
+                        </div>
+                        <div id="mainButtonsContainer">
+                            <button
+                                id="accountsButton"
+                                onMouseOver={() => showList(0, flagState, setFlagState)}
+                                onMouseOut={(event) => clearList(event, 0,
+                                    flagState, setFlagState)}>
+                                <img
+                                    id="accountsButtonPic"
+                                    src="/static/accounts_button_pic.png"
+                                    alt="Иконка авторизации"
+                                    width="40"
+                                    height="40"/>
+                                <Link
+                                    to={(contextState.authState.auth)? '/': AUTH_PAGE}
+                                    id={(contextState.authState.auth)? 'notActiveAuthLink': ''}
+                                    className="authListItemLink">
+                                    Учетные записи
+                                </Link>
+                                {(flagState & LIST_FLAGS.isAuthorizationListShown) &&
+                                    <div className="authListContainer">
+                                        <NavigationMenu
+                                            isAuth={contextState.authState.auth}
+                                            userRole={contextState.authState.userRole}
+                                            logOut={() => {
+                                                changeAuthState();
+                                                contextState.setAuthState({auth: false, userName: '',
+                                                    userRole: ''});
+                                                window.location.reload(true);
+                                                }
+                                            } />
+                                    </div>
+                                }
+                            </button>
+                            <Link
+                                to={linkObject(BASKET_PAGE, false)}
+                                id="basketButton">
+                                <img
+                                    id="basketButtonPic"
+                                    src="/static/basket_image.png"
+                                    alt="Картинка корзины"
+                                    width="40"
+                                    height="40"/>
+                                Корзина товаров
+                            </Link>
+                        </div>
+                    </div>
+                    <ul id="navigationList">
+                        <li
+                            className="menuItem"
+                            onMouseOver={() => showList(1, flagState, setFlagState)}
+                            onMouseOut={(event) => clearList(event, 1, flagState,
+                                setFlagState)}>
+                            <Link
+                                to={linkObject(CATALOG, false)}
+                                className="menuItemLink"
+                                onMouseOut={(event) => clearList(event, 1, flagState,
+                                    setFlagState)}>
+                                <span id="listItem1">
+                                    Каталог
+                                </span>
+                            </Link>
+                            {(flagState & LIST_FLAGS.isCatalogShown) &&
+                                <ul className="dropDownList">
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 1,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to={LIST_PAGE + '/equipment'}
+                                            className="dropDownListItemLink">
+                                            Оборудование
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 1,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to={LIST_PAGE + '/accessories'}
+                                            className="dropDownListItemLink">
+                                            Аксессуары
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 1,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to={LIST_PAGE + '/nutrition'}
+                                            className="dropDownListItemLink">
+                                            Питание
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 1,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to={LIST_PAGE + '/clothes'}
+                                            className="dropDownListItemLink">
+                                            Одежда
+                                        </Link>
+                                    </li>
+                                </ul>
+                            }
+                        </li>
+                        <li
+                            className="menuItem"
+                            onMouseOver={() => showList(2, flagState, setFlagState)}
+                            onMouseOut={(event) => clearList(event, 2, flagState,
+                                setFlagState)}>
+                            <Link
+                                to="/"
+                                className="menuItemLink"
+                                onMouseOut={(event) => clearList(event, 2, flagState,
+                                    setFlagState)}>
+                                <span id="listItem2">
+                                    Акции
+                                </span>
+                            </Link>
+                            {(flagState & LIST_FLAGS.isSharesListShown) &&
+                                <ul className="dropDownList">
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 2,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to="/"
+                                            className="dropDownListItemLink">
+                                            Искать на товары
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 2,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to="/"
+                                            className="dropDownListItemLink">
+                                            Ввести промо-код
+                                        </Link>
+                                    </li>
+                                    <li
+                                        className="dropDownListItem"
+                                        onMouseOut={(event) => clearList(event, 2,
+                                            flagState, setFlagState)}>
+                                        <Link
+                                            to="/"
+                                            className="dropDownListItemLink">
+                                            Мои покупки
+                                        </Link>
+                                    </li>
+                                </ul>
+                            }
+                        </li>
+                        <li className="menuItem">
+                            <Link
+                                to={MAP_PAGE}
+                                className="menuItemLink">
+                                Карта филиалов
+                            </Link>
+                        </li>
+                        <li className="menuItem">
+                            <Link
+                                to={linkObject(INFORMATION_PAGE, false)}
+                                className="menuItemLink">
+                                О магазине
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            }
+        </>
+    );
+}
+
+function showList(position, flagState, setFlagState) {
+    if (position === 0) {
+       // this.setState({showAuthorizationList: true});
+        flagState |= LIST_FLAGS.isAuthorizationListShown;
+    } else if (position === 1) {
+        document.getElementById('listItem1').style.color = '#3088C7';
+       // this.setState({catalogList: true});
+        flagState |= LIST_FLAGS.isCatalogShown;
+    } else {
+        document.getElementById('listItem2').style.color = '#3088C7';
+        //this.setState({sharesList: true});
+        flagState |= LIST_FLAGS.isSharesListShown;
+    }
+
+    setFlagState(flagState);
+}
+
+function clearList(event, position, flagState, setFlagState) {
+    let relatedTarget = event.relatedTarget.className;
+
+    if (relatedTarget !== 'dropDownListItem' && relatedTarget !== 'dropDownListItemLink'
+        && relatedTarget !== 'authList' && relatedTarget !== 'authListContainer'
+        && relatedTarget !== 'authListItem' && relatedTarget !== 'authListItemLink') {
+        if (position === 0) {
+            //this.setState({showAuthorizationList: false});
+            flagState ^= LIST_FLAGS.isAuthorizationListShown;
+        }
+        else if (position === 1) {
+            document.getElementById('listItem1').style.color = '#FFF';
+           // this.setState({catalogList: false});
+            flagState ^= LIST_FLAGS.isCatalogShown;
+        } else {
+            document.getElementById('listItem2').style.color = '#FFF';
+           // this.setState({sharesList: false});
+            flagState ^= LIST_FLAGS.isSharesListShown;
+        }
+    }
+
+    setFlagState(flagState);
 }
