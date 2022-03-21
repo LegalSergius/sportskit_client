@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../styles/regular/Header.css';
 import '../../styles/mobile/MobileHeader.css'
 import styles from "../../styles/index.module.css";
@@ -8,7 +8,7 @@ import {Redirect} from "react-router-dom";
 import {PRODUCT_PAGE} from "../../routing/routing_consts";
 import Header from "../Header";
 import {NavigationInputHandler} from "../../utils/NavigationInputHandler";
-
+/*
 export class NavigationInput extends React.Component {
     constructor(props) {
         super(props);
@@ -90,4 +90,81 @@ export class NavigationInput extends React.Component {
             </div>
         );
     }
+}*/
+
+export function NavigationInput(props) {
+    const [filteredDataArray, setFilteredDataArray] = useState([]);
+    const [inputAreaValue, setInputAreaValue] = useState();
+
+    const textInput = document.getElementById('mainInput');
+    const listItems = document.getElementsByClassName("listItem");
+    const isNullLength = (filteredDataArray.length === 0)
+    const currentComponent = this;
+    const handler = new NavigationInputHandler(filteredDataArray, currentComponent);
+
+    let listItemIndex;
+
+
+    const setInputValue = (event) => {
+        const value = event.target.value;
+        let filteredDataArray = [];
+
+        if (value.length > 0) {
+            filteredDataArray = props.dataArray.filter((data) => {
+                return data.toLowerCase().includes(value.toLowerCase());
+            });
+        }
+
+        setInputAreaValue((state) => {
+            return {...state, [event.target.name]: event.target.value};
+        });
+        setFilteredDataArray(filteredDataArray);
+    };
+
+    const onListItemSelected = (event, itemValue) => {
+        if (itemValue) {
+            props.propsSubmit(event, itemValue);
+        }
+    };
+
+    const removeFilteredData = (event) => {
+        if (!event.relatedTarget) {
+            setFilteredDataArray([]);
+        }
+    }
+
+    return (
+        <div id={props.isMobile? "mobileInputAndListContainer" : "inputAndListContainer"}>
+            <input
+                id={props.isMobile? "mobileMainInput" : "mainInput"}
+                type="text"
+                onChange={(event) => setInputValue(event)}
+                onKeyDown={(event) => handler.handleInputKeyDown(event, listItems)}
+                onBlur={(event) => this.removeFilteredData(event)}
+                value={inputAreaValue?.inputValue}
+                name="inputValue"
+                placeholder="Поиск товара..."
+                autoComplete="off" />
+            <ul className={styles.addPromotionList}>
+                {!isNullLength &&
+                    filteredDataArray.map((element) =>
+                        <li
+                            className={props.isMobile? "mobileListItem" : "listItem"}
+                            tabIndex="0"
+                            onKeyDown={(event) => {
+                                handler.handleListItemKeyDown(event, listItems)
+                                    .then((result) => listItemIndex = result)
+                            }}
+                            onTouchStart={(event) => onListItemSelected(event, element)}
+                            onMouseDown={(event) => onListItemSelected(event, element)}
+                            onBlur={(event) => removeFilteredData(event)}>
+                            {element}
+                        </li>
+                    )
+                }
+            </ul>
+        </div>
+    );
+
+
 }

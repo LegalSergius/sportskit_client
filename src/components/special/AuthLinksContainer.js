@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "../../styles/index.module.css";
 import '../../styles/regular/LoginPage.css';
 import '../../styles/regular/RegistrationPage.css';
@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {ENTER_PAGE, FORGOT_PASSWORD_PAGE, HOME_PAGE, REGISTRATION_PAGE} from "../../routing/routing_consts";
 import {isUserByURLLocation} from "../../utils/AuthorizationUtils";
 import {linkObject} from "../../utils/ComponentUtils";
-
+/*
 export class AuthLinksContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -67,4 +67,57 @@ export class AuthLinksContainer extends React.Component {
             </div>
         );
     }
+}
+*/
+export function AuthLinksContainer(props) {
+    const [isUser, setIsUser] = useState(true);
+
+    const newLine = (props.isLogin && props.isMobile)? <br/> : undefined;
+    const linkClass = props.isMobile? styles.mobileAuthorizationLinks : styles.authorizationLinks;
+    const loginOrRegistration = props.isLogin? 'Вы здесь впервые? Зарегистрируйтесь' :
+        'У Вас уже есть аккаунт? Войдите через него';
+    const buttonText = props.isLogin? 'Войти' : 'Отправить запрос';
+
+    useEffect(() => {
+        setIsUser(isUserByURLLocation(window.location.pathname));
+    });
+
+    return (
+        <div className={props.isMobile? styles.mobileAuthorizationLinksContainer
+            : styles.authorizationLinksContainer}>
+            {props.isLogin && isUser &&
+                <Link
+                    id="forgotPassword"
+                    to={linkObject(FORGOT_PASSWORD_PAGE, props.isMobile)}
+                    className={linkClass}>
+                    Забыли пароль?
+                </Link> }
+            <span
+                id={props.isLogin? "UserPasswordState" : ""}
+                onClick={props.changePasswordVisibility}
+                className={linkClass}>
+                    {(props.passwordVisibility)? 'Скрыть пароль' : 'Показать пароль'}
+                </span> {newLine}
+            <Link
+                id={props.isLogin? "toRegistrationLink" : ""}
+                to={{pathname: (props.isLogin? REGISTRATION_PAGE : ENTER_PAGE), state:
+                        {previous: (props.previousState)? props.previousState.previous : undefined}}}
+                className={linkClass}>
+                {loginOrRegistration}
+            </Link> {newLine}
+            <Link
+                id="UserSelectHomePageLink"
+                to={HOME_PAGE}
+                className={linkClass}>
+                На главную
+            </Link> {newLine}
+            <button
+                id={props.isLogin? "" : "registrationSubmit"}
+                type="submit"
+                onClick={(event) => props.handleSubmit(event)}
+                className={styles.submitButton}>
+                {buttonText}
+            </button>
+        </div>
+    );
 }
