@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styles from '../styles/index.module.css';
 import '../styles/regular/RegistrationPage.css';
 import {HOME_PAGE} from "../routing/routing_consts";
@@ -11,7 +11,8 @@ import {AuthLinksContainer} from "./special/AuthLinksContainer";
 import {RegistrationInputsContainer} from "./special/RegistrationInputsContainer";
 import {submit} from "../utils/AuthorizationUtils";
 import {Error} from "./special/Error";
-
+import {StateContext} from "../contexts";
+/*
 export default class RegistrationPage extends React.Component {
     constructor(props) {
         super(props);
@@ -109,5 +110,94 @@ export default class RegistrationPage extends React.Component {
                 </MediaQuery>
             );
         }
+    }
+}*/
+export default function RegistrationPage(props) {
+    const contextState = useContext(StateContext);
+    const previousLocation = props.location.state;
+
+    const [stateFlags, setStateFlags] = useState({completed: false, hasError: false,
+        passwordVisibility: false});
+    const [inputValueState, setInputValueState] = useState();
+
+    const emailOrPhone = inputValueState?.emailOrPhone, password = inputValueState?.password,
+        name = inputValueState?.name, surname = inputValueState?.surname,
+        validationPassword = inputValueState?.validationPassword;
+
+        useEffect(() => {
+        window.addEventListener('keydown', handleKeyDownSubmit);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDownSubmit);
+        };
+    });
+
+    const changePasswordVisibility = () => {
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, {passwordVisibility: !prevState.passwordVisibility})
+        });
+    };
+
+    const handleKeyDownSubmit = (event) => {
+        const ENTER_BUTTON_CODE = 13;
+
+        if (event.keyCode === ENTER_BUTTON_CODE) {
+            handleSubmit(event);
+        }
+    };
+
+    const setInputValue = (event) => {
+        setInputValueState((state) => {
+            return {...state, [event.target.name]: event.target.value};
+        });
+    };
+
+
+    const handleSubmit = async(event) => {
+        const newState = await submit(event, getAPI('auth/registration'),
+            inputValueState?.emailOrPhone, inputValueState?.password, inputValueState?.name, inputValueState?.surname,
+            inputValueState?.validationPassword);
+
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, newState);
+        });
+    }
+
+    document.title = "Регистрация | Sports Kit";
+
+    if (stateFlags.completed) {
+        return (previousLocation)? <Redirect to={previousLocation.previous}/> : <Redirect to={HOME_PAGE}/>;
+    } else {
+        return (
+            <>
+                {contextState.isMobile
+                    ?
+                    <MobileRegistrationPage/>
+                    :
+                    <>
+                        <div className={styles.authorizationContainer}>
+                            <h1
+                                id="headerForRegistration"
+                                className={styles.commonFont}>
+                                Регистрация
+                            </h1>
+                            <RegistrationInputsContainer
+                                setInputValue={setInputValue}
+                                valuesObject={{emailOrPhone, password, validationPassword, name, surname}}
+                                passwordVisibility={stateFlags.passwordVisibility}/>
+                            </div>
+                            {stateFlags.hasError &&
+                                <Error message={getErrorMessage()} />
+                            }
+                            <AuthLinksContainer
+                                isLogin={false}
+                                isMobile={false}
+                                passwordVisibility={stateFlags.passwordVisibility}
+                                changePasswordVisibility={changePasswordVisibility}
+                                previousState={previousLocation}
+                                handleSubmit={handleSubmit} />
+                        </> }
+            </>
+        );
     }
 }

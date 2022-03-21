@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styles from '../styles/index.module.css';
 import '../styles/regular/LoginPage.css';
 import {Redirect, Link} from "react-router-dom";
@@ -11,7 +11,8 @@ import {AuthLinksContainer} from "./special/AuthLinksContainer";
 import {isUserByURLLocation, submit} from "../utils/AuthorizationUtils";
 import {LoginInputsContainer} from "./special/LoginInputsContainer";
 import {Error} from "./special/Error";
-
+import {StateContext} from "../contexts";
+/*
 export default class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -107,5 +108,92 @@ export default class LoginPage extends React.Component {
                 </MediaQuery>
             );
         }
+    }
+}*/
+export default function LoginPage(props) {
+    const contextState = useContext(StateContext);
+
+    const [stateFlags, setStateFlags] = useState({completed: false, hasError: false,
+    passwordVisibility: false});
+    const [inputValueState, setInputValueState] = useState();
+
+    const isUser = isUserByURLLocation(window.location.pathname);
+    const previousLocation = props.location.state;
+
+    const changePasswordVisibility = () => {
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, {passwordVisibility: !prevState.passwordVisibility})
+        });
+    };
+
+    const handleKeyDownSubmit = (event) => {
+        const ENTER_BUTTON_CODE = 13;
+
+        if (event.keyCode === ENTER_BUTTON_CODE) {
+            handleSubmit(event);
+        }
+    }
+
+    const handleSubmit = async(event) => {
+        const newState = await submit(event, getAPI('auth/login?parameter=' +
+            ((isUser)? 'USER' : 'ADMIN')), inputValueState?.emailOrPhone, inputValueState?.password);
+
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, newState);
+        });
+    }
+
+    const setInputValue = (event) => {
+        setInputValueState((state) => {
+           return {...state, [event.target.name]: event.target.value};
+        });
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDownSubmit);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDownSubmit);
+        };
+    });
+
+    document.title = "Вход | Sports Kit";
+
+    if (stateFlags.completed) {
+        return (previousLocation) ? <Redirect to={previousLocation.previous}/> :
+            (isUser) ? <Redirect to={HOME_PAGE}/> : <Redirect to={SERVICE_PANEL}/>;
+    } else {
+        return (
+            <>
+                {contextState.isMobile
+                    ?
+                    <MobileLoginPage/>
+                    :
+                    <div className={styles.authorizationContainer}>
+                        <h1
+                            id="headerForEnter"
+                            className={styles.commonFont}>
+                            Вход
+                        </h1>
+                        <LoginInputsContainer
+                            isMobile={false}
+                            emailOrPhone={inputValueState?.emailOrPhone}
+                            password={inputValueState?.password}
+                            passwordVisibility={stateFlags.passwordVisibility}
+                            setInputValue={setInputValue}/>
+                        {stateFlags.hasError &&
+                            <Error message={getErrorMessage()} />
+                        }
+                        <AuthLinksContainer
+                            isLogin
+                            isMobile={false}
+                            passwordVisibility={stateFlags.passwordVisibility}
+                            changePasswordVisibility={changePasswordVisibility}
+                            previousState={previousLocation}
+                            handleSubmit={handleSubmit}/>
+                    </div>
+                }
+            </>
+        );
     }
 }

@@ -318,7 +318,7 @@ export default class Header extends React.Component {
     }
 }*/
 
-const LIST_FLAGS = {isAuthorizationListShown: 0x3, isCatalogShown: 0x1, isSharesListShown: 0x2};
+const LIST_FLAGS = {isAuthorizationListShown: 0b001, isCatalogShown: 0b010, isSharesListShown: 0b100};
 
 export default function Header() {
     const contextState = useContext(StateContext);
@@ -346,9 +346,6 @@ export default function Header() {
                 <Redirect to={PRODUCT_PAGE + '/' + overrideState.responseObject.dataValues.id}/>
             </>);
     }
-
-    console.log(`авторизация - ${flagState & LIST_FLAGS.isAuthorizationListShown}, список - 
-                    ${flagState & LIST_FLAGS.isSharesListShown}, каталог - ${flagState & LIST_FLAGS.isCatalogShown}`);
 
     return (
         <>
@@ -490,7 +487,7 @@ export default function Header() {
                                     Акции
                                 </span>
                             </Link>
-                            {(flagState & LIST_FLAGS.isSharesListShown) &&
+                            {flagState & LIST_FLAGS.isSharesListShown &&
                                 <ul className="dropDownList">
                                     <li
                                         className="dropDownListItem"
@@ -548,15 +545,12 @@ export default function Header() {
 
 function showList(position, flagState, setFlagState) {
     if (position === 0) {
-       // this.setState({showAuthorizationList: true});
         flagState |= LIST_FLAGS.isAuthorizationListShown;
     } else if (position === 1) {
         document.getElementById('listItem1').style.color = '#3088C7';
-       // this.setState({catalogList: true});
         flagState |= LIST_FLAGS.isCatalogShown;
     } else {
         document.getElementById('listItem2').style.color = '#3088C7';
-        //this.setState({sharesList: true});
         flagState |= LIST_FLAGS.isSharesListShown;
     }
 
@@ -570,17 +564,14 @@ function clearList(event, position, flagState, setFlagState) {
         && relatedTarget !== 'authList' && relatedTarget !== 'authListContainer'
         && relatedTarget !== 'authListItem' && relatedTarget !== 'authListItemLink') {
         if (position === 0) {
-            //this.setState({showAuthorizationList: false});
-            flagState ^= LIST_FLAGS.isAuthorizationListShown;
+            flagState &= ~LIST_FLAGS.isAuthorizationListShown;
         }
         else if (position === 1) {
             document.getElementById('listItem1').style.color = '#FFF';
-           // this.setState({catalogList: false});
-            flagState ^= LIST_FLAGS.isCatalogShown;
+            flagState &= ~LIST_FLAGS.isCatalogShown;
         } else {
             document.getElementById('listItem2').style.color = '#FFF';
-           // this.setState({sharesList: false});
-            flagState ^= LIST_FLAGS.isSharesListShown;
+            flagState &= ~LIST_FLAGS.isSharesListShown;
         }
     }
 
