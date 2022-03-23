@@ -11,7 +11,7 @@ import {getAPI} from "../utils/ComponentUtils";
 
 const App = React.lazy(() => import('../components/special/HomePage'));
 const InformationPage = React.lazy(() => import('../components/special/InformationPage'));
-const MapPage = React.lazy(() => import('../components/MapPage'));
+const MapContainer = React.lazy(() => import('../components/special/MapContainer'));
 const AuthPage = React.lazy(() => import('../components/special/AuthPage'));
 const LoginPage = React.lazy(() => import('../components/LoginPage'));
 const RegistrationPage = React.lazy(() => import('../components/RegistrationPage'));
@@ -68,7 +68,7 @@ function AppRouter() {
                        component={InformationPage}/>
                    <Navigation
                        path={MAP_PAGE}
-                       component={MapPage}/>
+                       component={MapContainer}/>
                    <Navigation
                        exact path={CATALOG}
                        component={Catalog}/>

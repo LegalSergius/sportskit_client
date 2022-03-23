@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styles from '../../styles/index.module.css';
 import '../../styles/regular/AuthPage.css';
 import {Link} from "react-router-dom";
 import {ENTER_PAGE, REGISTRATION_PAGE} from "../../routing/routing_consts";
-
+import {StateContext} from "../../contexts";
+/*
 export default class AuthPage extends React.Component {
     render() {
         document.title = "Авторизация | Sports Kit";
@@ -37,4 +38,38 @@ export default class AuthPage extends React.Component {
                 </div>
             </> )
     }
+}*/
+export default function AuthPage() {
+    const contextState = useContext(StateContext);
+
+    document.title = "Авторизация | Sports Kit";
+
+    return (
+        <>
+            <h1
+                className={styles.header}>
+                Авторизация
+            </h1>
+            <div
+                id={contextState.isMobile? "mobileButtonsContainer" : "desktopButtonsContainer"}
+                className="buttonsContainer">
+                <Link
+                    to={{
+                        pathname: ENTER_PAGE + 'user',
+                    }}
+                    className="authorizationButtons">
+                    Войти
+                </Link>
+                <img
+                    id="dividerImage"
+                    src="../static/divider.jpg"
+                    alt="Разделитель" />
+                <Link
+                    to={REGISTRATION_PAGE}
+                    className="authorizationButtons">
+                    Зарегистрироваться
+                </Link>
+            </div>
+        </>
+    );
 }
