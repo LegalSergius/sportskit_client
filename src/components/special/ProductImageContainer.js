@@ -1,7 +1,8 @@
 import React from "react";
 import '../../styles/regular/ProductPage.css';
 import '../../styles/mobile/MobileProductPage.css';
-
+import { useState } from "react";
+/*
 export class ProductImageContainer extends React.Component {
    constructor(props) {
        super(props);
@@ -54,4 +55,50 @@ export class ProductImageContainer extends React.Component {
            </div>
        );
    }
+}
+*/
+export function ProductImageContainer(props) {
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+
+    const setSrcFile = (fileIndex) => {
+        return "data:image/png;base64," + props.productMediaArray[fileIndex];
+    };
+
+    const changeCurrentIndex = (newPhotoIndex) => {
+        const lastIndex = props.productMediaArray.length - 1;
+
+        if (newPhotoIndex < 0) {
+            newPhotoIndex = lastIndex;
+        } else if (newPhotoIndex > lastIndex) {
+            newPhotoIndex = 0;
+        }
+
+        setCurrentPhotoIndex(newPhotoIndex);
+    };
+
+    return (
+        <div id={props.isMobile? "mobileProductImageContainer": ""}>
+            <img
+                id={props.isMobile? "mobileProductImage" : "productImage"}
+                tabIndex="0"
+                src={setSrcFile(currentPhotoIndex)}
+                alt="Фотография продукта"/>
+            {(props.productMediaArray.length > 1) &&
+                <div id={props.isMobile? "" : "scrollButtonsContainer"}>
+                    <img
+                        id={props.isMobile? "mobileProductSwitchLeft" : ""}
+                        className={props.isMobile? "mobileProductPageSwitchButtons" : "scrollButtons"}
+                        src="../../static/to_left.png"
+                        onClick={() => changeCurrentIndex(--currentPhotoIndex)}
+                        alt="Предыдущая фотография" />
+                    <img
+                        id={props.isMobile? "mobileProductSwitchRight" : ""}
+                        className={props.isMobile? "mobileProductPageSwitchButtons" : "scrollButtons"}
+                        src="../static/to_right.png"
+                        onClick={() => changeCurrentIndex(++currentPhotoIndex)}
+                        alt="Следущая фотография" />
+                </div>
+            }
+        </div>
+    );
 }
