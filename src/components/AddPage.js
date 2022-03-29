@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/index.module.css';
 import '../styles/regular/AddPage.css';
 import {addProduct, addPromotion, fillArray, get} from "../httpTasks/tasks/ProductAPITasks";
@@ -6,7 +6,7 @@ import {getAPI, handleInputKeyDown, handleListItemKeyDown} from "../utils/Compon
 import {getErrorMessage} from "../httpTasks";
 import {SERVICE_PANEL} from "../routing/routing_consts";
 import {Redirect} from "react-router-dom";
-
+/*
 export default class AddPage extends React.Component {
     constructor(props) {
         super(props);
@@ -419,4 +419,67 @@ export default class AddPage extends React.Component {
             </div>
         );
     }
+}*/
+
+export default function AddPage(props) {
+    const [categoryAndProductInfo, setCategoryAndProductInfo] = useState({header: '', nameOfNewElement: '', priceOrNumberValue: ''});
+    const [priceValue, setPriceValue] = useState('тенге');
+
+
+    let fileInput, textInput;
+
+    useEffect(async() => {
+        let currentSection = window.location.pathname.split('/').at(-1);
+        let title;
+
+        fileInput = document.getElementById('fileChoice');
+        fileInput.addEventListener('change', downloadFiles);
+
+        switch (currentSection) {
+            case 'newProduct':
+                title = 'Добавление товаров | Sports Kit';
+
+                this.displayClearButton();
+                this.setState({isNewProduct: true, header: 'Добавление объявлений',
+                    nameOfNewElement: 'Наименование товара:', priceOrNumberValue: 'Цена на товар:'});
+                break;
+            case 'newPromotion':
+                title = 'Добавление акций | Sports Kit';
+                
+                textInput = document.getElementById('productNameInput');
+
+                let products;
+                let getData = async() => {
+                    products = await get(getAPI('products/getProducts?mediaRequired=' + false));
+                }
+                getData().then(async() => {
+                    this.productNameArray = await fillArray(products);
+                    this.setState({header: 'Добавление акций', nameOfNewElement: 'Выберите товар, ' +
+                            'на который появится акция:', priceOrNumberValue: 'Величина акции:', priceSpan: '%'});
+                });
+                break;
+            case 'newPromo' :
+                title = 'Добавление промо-кодов | Sports Kit';
+
+                this.setState({isNewPromoCode: true, header: 'Добавление промо-кода',
+                    priceOrNumberValue: 'Величина скидки:', priceSpan: '%'});
+                break;
+            case 'updateProduct':
+                title = 'Обновление товара | Sports Kit';
+
+                const updatableObject = this.props.location.state.object, dataValues = updatableObject.dataValues;
+                this.updatableMediaArray = updatableObject.mediaArray;
+                this.updatableProductId = dataValues.id;
+
+                this.downloadFiles(true);
+                this.displayClearButton();
+                this.setState({header: 'Изменение объявления', isUpdate: true, productTypeForUpdate: updatableObject.productType,
+                    productName: dataValues.name, nameOfNewElement: 'Имя обновляемого товара: ', textareaValue: dataValues.description,
+                    priceOrNumberValue: 'Цена обновляемого товара: ', price: dataValues.price});
+                break;
+        }
+        document.title = title;
+    });
 }
+
+

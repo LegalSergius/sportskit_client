@@ -70,7 +70,8 @@ export function linkObject(page, isMobile = false) {
         pathname: page,
         state: {
             isMobile
-        }};
+        }
+    };
 }
 
 

@@ -322,6 +322,7 @@ const LIST_FLAGS = {isAuthorizationListShown: 0b001, isCatalogShown: 0b010, isSh
 
 export default function Header() {
     const contextState = useContext(StateContext);
+    
     const [dataList, setDataList] = useState([]);
     const [overrideState, setOverrideState] = useState({responseObject: null, isRedirected: false});
     const [flagState, setFlagState] = useState(0);
