@@ -422,64 +422,198 @@ export default class AddPage extends React.Component {
 }*/
 
 export default function AddPage(props) {
-    const [categoryAndProductInfo, setCategoryAndProductInfo] = useState({header: '', nameOfNewElement: '', priceOrNumberValue: ''});
+    const [categoryAndProductInfo, setCategoryAndProductInfo] = useState({header: '', nameOfNewElement: '', 
+    priceOrNumberValue: ''});
+    const [updateObject, setUpdateObject] = useState({id: undefined, type: '', name: '', price: undefined,
+     media: []});
+    const [productNames, setProductNames] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [priceValue, setPriceValue] = useState('тенге');
+    const [textAreaValue, setTextAreaValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState('Оборудование');
+    const [editablePhotoIndex, setEditablePhotoIndex] = useState(undefined);
 
-
-    let fileInput, textInput;
+    let fileInput = document.getElementById('fileChoice'), textInput;
 
     useEffect(async() => {
         let currentSection = window.location.pathname.split('/').at(-1);
         let title;
 
-        fileInput = document.getElementById('fileChoice');
         fileInput.addEventListener('change', downloadFiles);
 
         switch (currentSection) {
             case 'newProduct':
                 title = 'Добавление товаров | Sports Kit';
 
-                this.displayClearButton();
-                this.setState({isNewProduct: true, header: 'Добавление объявлений',
-                    nameOfNewElement: 'Наименование товара:', priceOrNumberValue: 'Цена на товар:'});
+                displayClearButton();
+                setCategoryAndProductInfo({header: 'Добавление объявлений',
+                nameOfNewElement: 'Наименование товара:', priceOrNumberValue: 'Цена на товар:'});
+                /*this.setState({isNewProduct: true, header: 'Добавление объявлений',
+                    nameOfNewElement: 'Наименование товара:', priceOrNumberValue: 'Цена на товар:'});*/
                 break;
             case 'newPromotion':
                 title = 'Добавление акций | Sports Kit';
                 
                 textInput = document.getElementById('productNameInput');
 
-                let products;
-                let getData = async() => {
-                    products = await get(getAPI('products/getProducts?mediaRequired=' + false));
-                }
-                getData().then(async() => {
-                    this.productNameArray = await fillArray(products);
-                    this.setState({header: 'Добавление акций', nameOfNewElement: 'Выберите товар, ' +
-                            'на который появится акция:', priceOrNumberValue: 'Величина акции:', priceSpan: '%'});
+                await get(getAPI('products/getProducts?mediaRequired=false')).then(async(products) => {
+                    let productNameArray = await fillArray(products);
+
+                    setCategoryAndProductInfo({header: 'Добавление акций', nameOfNewElement: 'Выберите товар, ' +
+                    'на который появится акция:', priceOrNumberValue: 'Величина акции:'});
+                    setProductNames(productNameArray);
+                    setPriceValue('%');
+
+                    /*this.setState({header: 'Добавление акций', nameOfNewElement: 'Выберите товар, ' +
+                            'на который появится акция:', priceOrNumberValue: 'Величина акции:', priceSpan: '%'});*/
                 });
                 break;
             case 'newPromo' :
                 title = 'Добавление промо-кодов | Sports Kit';
 
-                this.setState({isNewPromoCode: true, header: 'Добавление промо-кода',
-                    priceOrNumberValue: 'Величина скидки:', priceSpan: '%'});
+                setCategoryAndProductInfo((previous) => {
+                    return {...previous, header: 'Добавление промо-кода',
+                    priceOrNumberValue: 'Величина скидки:'};
+                });
+                setPriceValue('%');
+
+                /*this.setState({isNewPromoCode: true, header: 'Добавление промо-кода',
+                    priceOrNumberValue: 'Величина скидки:', priceSpan: '%'});*/
                 break;
             case 'updateProduct':
                 title = 'Обновление товара | Sports Kit';
 
-                const updatableObject = this.props.location.state.object, dataValues = updatableObject.dataValues;
-                this.updatableMediaArray = updatableObject.mediaArray;
-                this.updatableProductId = dataValues.id;
+                const updatableObject = props.location.state.object;
+                const dataValues = updatableObject.dataValues;
 
-                this.downloadFiles(true);
-                this.displayClearButton();
-                this.setState({header: 'Изменение объявления', isUpdate: true, productTypeForUpdate: updatableObject.productType,
+                downloadFiles(true);
+                displayClearButton();
+                /*this.setState({header: 'Изменение объявления', isUpdate: true, productTypeForUpdate: updatableObject.productType,
                     productName: dataValues.name, nameOfNewElement: 'Имя обновляемого товара: ', textareaValue: dataValues.description,
-                    priceOrNumberValue: 'Цена обновляемого товара: ', price: dataValues.price});
+                    priceOrNumberValue: 'Цена обновляемого товара: ', price: dataValues.price});*/
+                setCategoryAndProductInfo({header: 'Изменение объявления', nameOfNewElement: 'Имя обновляемого товара: ', 
+                priceOrNumberValue: 'Цена обновляемого товара: '});
+                setUpdateObject({id: dataValues?.id, type: updatableObject?.productType, 
+                    name: dataValues?.name, media: updatableObject?.mediaArray});
+                setTextAreaValue(dataValues?.description);
                 break;
         }
         document.title = title;
+
+        return () => {
+            if (fileInput) {
+                fileInput.removeEventListener('keydown', downloadFiles);
+            }
+        };
     });
+
+    const displayClearButton = () => {
+        let images = document.getElementsByClassName('productPhoto');
+
+        for (let index = 0; index < images.length; index++) {
+            let span = document.getElementById(String(index));
+            if (images[index].src.includes('add_picture')) {
+                span.className = "notClearPhotoItem";
+            } else {
+                span.className = "clearPhotoItem";
+            }
+        }
+    }
+
+    const downloadFiles = (isUpdate) => {
+        let currentPhotoIndex = (editablePhotoIndex ?? 0);
+        let input = document.getElementById('fileChoice'), photos = document.getElementsByClassName('productPhoto');
+        let selectedFiles = (isUpdate && typeof isUpdate !== 'object') ? updateObject.media
+            : input.files;
+
+        if (selectedFiles.length) {
+            const MAX_COUNT = 2;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                photos[currentPhotoIndex].src = (isUpdate && typeof isUpdate !== 'object') ?
+                    "data:image/png;base64," + selectedFiles[i] : window.URL.createObjectURL(selectedFiles[i]);
+                currentPhotoIndex++;
+                if (currentPhotoIndex > MAX_COUNT) {
+                    break;
+                }
+            }
+        }
+
+        displayClearButton();
+       // this.setState({editablePhotoIndex: null, isClickedOnPhoto: false});
+        setEditablePhotoIndex(undefined);
+    }
+
+    const onPhotoClick = (index) => {
+      //  this.setState({editablePhotoIndex: index, isClickedOnPhoto: true});
+        setEditablePhotoIndex(index);
+
+        fileInput.click();
+    }
+
+    const setInputValue = (event, element) => {
+        const target = event.target, value = target.value;
+
+        switch (element) {
+            case 'select':
+                //this.setState({selectValue: event.target.value});
+                setSelectedValue(value);
+                break;
+            case 'input':
+                if (target.id === 'productNameInput') {
+                    let filteredDataArray = [];
+                    if (value.length > 0) {
+                        filteredDataArray = productNames.filter((product) => {
+                            return product.toLowerCase().includes(value.toLowerCase());
+                        });
+                    }
+                    //this.setState({filteredDataArray, productName: value});
+                    setFilteredData(filteredDataArray);
+                } else {
+                    //this.setState({[event.target.name]: value});
+                }
+                break;
+            case 'textarea':
+                //this.setState({textareaValue: event.target.value});
+                setTextAreaValue(value);
+                break;
+        }
+    }
+
+    const onListItemSelected = (itemValue) => {
+        this.setState({productName: itemValue, filteredDataArray: []});
+    }
+
+    const removeFilteredData = (event) => {
+        if (!event.relatedTarget) {
+            setFilteredData([]);
+        }
+    }
+
+    const clearPhoto = (photoIndex) => {
+        let images = document.getElementsByClassName('productPhoto') 
+        ?? document.getElementsByClassName('mobileProductPhoto');
+
+        images[photoIndex].src = "../../static/add_picture.png";
+
+        displayClearButton();
+    }
+
+    const getFiles = async(imageContainer) => {
+        let files = Array.from(imageContainer), mediaArray = [];
+
+        for (let item of files) {
+            if (!item.src.includes('add_picture')) {
+                await fetch(item.src).then((result) => result.blob()).then((blob) => {
+                    const file = new File([blob], String(new Date().getTime()) + '.png', blob);
+                    mediaArray.push(file);
+                });
+            }
+        }
+        
+        return mediaArray;
+    }
+
 }
 
 

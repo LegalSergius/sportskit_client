@@ -112,25 +112,12 @@ export default function HomePage() {
 
 
     useEffect(async() => {
-        //const token = localStorage.getItem('token');
-        //this.textInput = document.getElementById('mainInput');
-
-        /*const checkToken = async() => {
-            return await checkTokenValidity(getAPI('auth/check'), TOKEN);
-        }
-        checkToken().then((decodedToken) => {
-            if (decodedToken) {
-                this.setState({isAuth: true, userName: decodedToken.name});
-            }
-        });*/
-       /* const response = async() => {
-        return await get(getAPI('products/getProducts?mediaRequired=' + false));
-        };*/
         await get(getAPI('products/getProducts?mediaRequired=' + true + '&option=createdAt'),
             true).then(async(result) => {
                 let newProductsMedia = result.mediaArray;
                 let newProducts = result.productsObject;
                 let popularProducts;
+
                 await get(getAPI('products/getProducts?mediaRequired=' + true +
                     '&option=sales'), true).then((result) => {
                     let popularProductsMedia = result.mediaArray;
