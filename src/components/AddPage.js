@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from '../styles/index.module.css';
 import '../styles/regular/AddPage.css';
 import {addProduct, addPromotion, fillArray, get} from "../httpTasks/tasks/ProductAPITasks";
@@ -6,6 +6,7 @@ import {getAPI, handleInputKeyDown, handleListItemKeyDown} from "../utils/Compon
 import {getErrorMessage} from "../httpTasks";
 import {SERVICE_PANEL} from "../routing/routing_consts";
 import {Redirect} from "react-router-dom";
+import { StateContext } from '../contexts';
 /*
 export default class AddPage extends React.Component {
     constructor(props) {
@@ -422,9 +423,11 @@ export default class AddPage extends React.Component {
 }*/
 
 export default function AddPage(props) {
+    const contextState = useContext(StateContext);
+
     const [categoryAndProductInfo, setCategoryAndProductInfo] = useState({header: '', nameOfNewElement: '', 
     priceOrNumberValue: ''});
-    const [updateObject, setUpdateObject] = useState({id: undefined, type: '', name: '', price: undefined,
+    const [updateObject, setUpdateObject] = useState({id: undefined, type: '', price: undefined,
      media: []});
     const [productNames, setProductNames] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -432,6 +435,15 @@ export default function AddPage(props) {
     const [textAreaValue, setTextAreaValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('Оборудование');
     const [editablePhotoIndex, setEditablePhotoIndex] = useState(undefined);
+    const [inputValueState, setInputValueState] = useState();
+
+    const productCategory = this.state.isUpdate? 'Категория товара: ' + this.state.productTypeForUpdate
+                                                        : 'Выберите категорию товара: ';
+    const photosTitle = this.state.isNewProduct? 'Добавьте несколько фотографий: ' : 'Фотографии товара: ';
+    const currentObject = this;
+    const isMobile = contextState.isMobile;
+    const promotionListsItem = document.getElementsByClassName(styles.addPromotionListItem);
+
 
     let fileInput = document.getElementById('fileChoice'), textInput;
 
@@ -493,8 +505,10 @@ export default function AddPage(props) {
                     priceOrNumberValue: 'Цена обновляемого товара: ', price: dataValues.price});*/
                 setCategoryAndProductInfo({header: 'Изменение объявления', nameOfNewElement: 'Имя обновляемого товара: ', 
                 priceOrNumberValue: 'Цена обновляемого товара: '});
-                setUpdateObject({id: dataValues?.id, type: updatableObject?.productType, 
-                    name: dataValues?.name, media: updatableObject?.mediaArray});
+                setUpdateObject({id: dataValues?.id, type: updatableObject?.productType, media: updatableObject?.mediaArray});
+                setInputValueState((state) => {
+                    return {...state, productName: dataValues?.name};
+                 });
                 setTextAreaValue(dataValues?.description);
                 break;
         }
@@ -571,10 +585,12 @@ export default function AddPage(props) {
                     setFilteredData(filteredDataArray);
                 } else {
                     //this.setState({[event.target.name]: value});
+                    setInputValueState((state) => {
+                        return {...state, [event.target.name]: event.target.value};
+                     });
                 }
                 break;
             case 'textarea':
-                //this.setState({textareaValue: event.target.value});
                 setTextAreaValue(value);
                 break;
         }
@@ -613,6 +629,215 @@ export default function AddPage(props) {
         
         return mediaArray;
     }
+
+    const submitResponse = async(event) => {
+        event.preventDefault();
+
+        let productType = selectedValue, description = textAreaValue;
+        let images = document.getElementsByClassName('productPhoto');
+        let photosArray = await getFiles(images);
+
+        try {
+            let form = document.getElementById('form'), response;
+            if (this.state.isNewProduct || this.state.isUpdate) {
+                let method = this.state.isUpdate? 'PUT' : 'POST';
+                let url = this.state.isUpdate? getAPI('products/updateProduct/' + this.updatableProductId) :
+                    getAPI('products/addProduct/' + productType);
+
+                response = await addProduct(url, method, form, {description, photosArray});
+            } else if (this.state.isNewPromoCode) {
+                response = await addPromotion(getAPI('products/addPromocode/' + productType), 'POST', form);
+            } else {
+                response = await addPromotion(getAPI('products/addPromotion'), 'POST', form);
+            }
+            if (response.message === 'Ok') {
+                this.setState({completed: true});
+            }
+        } catch(e) {
+            console.log('submitResponse error - ' + e);
+            this.setState({hasError: true});
+        }
+    }
+
+    if (this.state.completed) {
+        return <Redirect to={SERVICE_PANEL} />
+    }
+
+    return (
+        <div id="addPageContainer">
+            <h2
+                id={isMobile? "addPageMobileHeader" : ""}
+                className={styles.commonFont}>
+                {categoryAndProductInfo.header}
+            </h2>
+            <div>
+                <form
+                    id="form"
+                    encType="multipart/form-data"
+                    onSubmit={(e) => this.submitResponse(e)}>
+                    {(this.state.isNewProduct || this.state.isNewPromoCode || this.state.isUpdate) &&
+                        <label>
+                            {productCategory}
+                            {!this.state.isUpdate &&
+                                <select
+                                    id="addPageSelect"
+                                    value={selectedValue}
+                                    onChange={(event) => setInputValue(event, 'select')}>
+                                    <option value="Оборудование">
+                                        Оборудование
+                                    </option>
+                                    <option value="Аксессуары">
+                                        Аксессуары
+                                    </option>
+                                    <option value="Питание">
+                                        Питание
+                                    </option>
+                                    <option value="Одежда">
+                                        Одежда
+                                    </option>
+                                </select> 
+                                }
+                        </label> 
+                    }
+                    {!this.state.isNewPromoCode &&
+                        <label className="addPageLabels">
+                            {categoryAndProductInfo.nameOfNewElement}
+                            <div id={isMobile? "mobileAddPromotionContainer" : "addPromotionContainer"}>
+                                <input
+                                    id="productNameInput"
+                                    type="text"
+                                    onChange={(event) => setInputValue(event, 'input')}
+                                    onKeyDown={(event) => handleInputKeyDown(filteredData, currentObject,  promotionListsItem, event)}
+                                    onBlur={(event) => removeFilteredData(event)}
+                                    value={inputValueState?.productName}
+                                    name="productName"
+                                    autoComplete="off"
+                                    className={styles.addPageInputs} />
+                                {!this.state.isNewProduct && !this.state.isUpdate &&
+                                    <ul className={styles.addPromotionList}>
+                                        {filteredData.map(
+                                            (element) =>
+                                                <li
+                                                    className={styles.addPromotionListItem}
+                                                    tabIndex="0"
+                                                    onKeyDown={(event) => {
+                                                        handleListItemKeyDown(filteredData, currentObject, promotionListsItem, event).then(
+                                                            (result) => this.listItemIndex = result
+                                                        )}}
+                                                    onMouseDown={() => onListItemSelected(element)}
+                                                    onBlur={(event) => removeFilteredData(event)}>
+                                                    {element}
+                                                </li> 
+                                            )
+                                        }
+                                    </ul> 
+                                }
+                            </div>
+                        </label>
+                    }
+                    {(this.state.isNewProduct || this.state.isUpdate) &&
+                        <label className="addPageLabels">
+                            Описание товара:
+                            <textarea
+                                id={isMobile? "mobileAddPageTextArea" : "addPageTextarea"}
+                                value={textAreaValue}
+                                onChange={(event) => setInputValue(event, 'textarea')}/>
+                        </label> }
+                    {this.state.isNewPromoCode &&
+                        <label className="addPageLabels">
+                            Введите 6-значный код промо-скидки:
+                            <input
+                                id="priceInput"
+                                type="text"
+                                onChange={(event) => setInputValue(event, 'input')}
+                                value={inputValueState?.promo}
+                                maxLength="6"
+                                name="promo"
+                                className={styles.addPageInputs} />
+                        </label> }
+                    <label className="addPageLabels">
+                        {this.state.priceOrNumberValue}
+                        <input
+                            id={isMobile? "mobilePriceInput" : "priceInput"}
+                            type="number"
+                            onChange={(event) => setInputValue(event, 'input')}
+                            value={inputValueState?.price}
+                            name="price"
+                            className={styles.addPageInputs} />
+                        <span id="priceInputSpan">
+                            {priceValue}
+                        </span>
+                    </label>
+                    <div id={(this.state.isNewProduct || this.state.isUpdate) ? "newProductContainer" : "notNewProductContainer"}>
+                        <label
+                            id="addPhotoLabel"
+                            className="addPageLabels"
+                            htmlFor="fileChoice">
+                            {photosTitle}
+                        </label>
+                        <input
+                            id="fileChoice"
+                            type="file"
+                            onClick={(event) => {event.target.value = ''}}
+                            accept=".jpg, .jpeg, .png"
+                            multiple />
+                        <div id="photosContainer">
+                            <div className={isMobile? "mobilePhotosContainerChild" : "photosContainerChild"}>
+                                <img
+                                    className="productPhoto"
+                                    src="../../static/add_picture.png"
+                                    onClick={() => onPhotoClick(0)}
+                                    alt="Фото товара" />
+                                <span
+                                    id="0"
+                                    onClick={() => {clearPhoto(0)}}
+                                    className="clearPhotoItem">
+                                    &times;
+                                </span>
+                            </div>
+                            <div className={isMobile? "mobilePhotosContainerChild" : "photosContainerChild"}>
+                                <img
+                                    className="productPhoto"
+                                    src="../../static/add_picture.png"
+                                    onClick={() => onPhotoClick(1)}
+                                    alt="Фото товара"/>
+                                <span
+                                    id="1"
+                                    onClick={() => {clearPhoto(1)}}
+                                    className="clearPhotoItem">
+                                    &times;
+                                </span>
+                            </div>
+                            <div className={isMobile? "mobilePhotosContainerChild" : "photosContainerChild"}>
+                                <img
+                                    className="productPhoto"
+                                    src="../../static/add_picture.png"
+                                    onClick={() => onPhotoClick(2)}
+                                    alt="Фото товара"/>
+                                <span
+                                    id="2"
+                                    onClick={() => {clearPhoto(2)}}
+                                    className="clearPhotoItem">
+                                    &times;
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {this.state.hasError &&
+                        <span
+                            id="addPageError"
+                            className={styles.errorMessage}>
+                            {getErrorMessage()}
+                        </span> }
+                    <button
+                        id="addButton"
+                        className={styles.submitButton}>
+                        {this.state.isUpdate? "Редактировать" : "Добавить"}
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
 
 }
 
