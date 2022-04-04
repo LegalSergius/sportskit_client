@@ -185,18 +185,19 @@ export default function RegistrationPage(props) {
                                 setInputValue={setInputValue}
                                 valuesObject={{emailOrPhone, password, validationPassword, name, surname}}
                                 passwordVisibility={stateFlags.passwordVisibility}/>
-                            </div>
-                            {stateFlags.hasError &&
-                                <Error message={getErrorMessage()} />
-                            }
-                            <AuthLinksContainer
-                                isLogin={false}
-                                isMobile={false}
-                                passwordVisibility={stateFlags.passwordVisibility}
-                                changePasswordVisibility={changePasswordVisibility}
-                                previousState={previousLocation}
-                                handleSubmit={handleSubmit} />
-                        </> }
+                        </div>
+                        {stateFlags.hasError &&
+                            <Error message={getErrorMessage()} />
+                        }
+                        <AuthLinksContainer
+                            isLogin={false}
+                            isMobile={false}
+                            passwordVisibility={stateFlags.passwordVisibility}
+                            changePasswordVisibility={changePasswordVisibility}
+                            previousState={previousLocation}
+                            handleSubmit={handleSubmit} />
+                    </> 
+                }
             </>
         );
     }

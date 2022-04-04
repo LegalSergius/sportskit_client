@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+
 import '../styles/mobile/MobileLoginPage.css';
 import styles from '../styles/index.module.css';
 import {FORGOT_PASSWORD_PAGE, HOME_PAGE, REGISTRATION_PAGE, SERVICE_PANEL} from "../routing/routing_consts";
@@ -9,7 +10,7 @@ import {isUserByURLLocation, submit} from "../utils/AuthorizationUtils";
 import {LoginInputsContainer} from "../components/special/LoginInputsContainer";
 import {getAPI} from "../utils/ComponentUtils";
 import {Error} from "../components/special/Error";
-
+/*
 export class MobileLoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -50,7 +51,7 @@ export class MobileLoginPage extends React.Component {
     render() {
        // const PREVIOUS_STATE = this.props.location.state;
         if (this.state.completed) {
-            /* return (PREVIOUS_STATE) ? <Redirect to={PREVIOUS_STATE.previous}/> :*/
+         //    return (PREVIOUS_STATE) ? <Redirect to={PREVIOUS_STATE.previous}/> :
             return (this.isUser) ? <Redirect to={HOME_PAGE}/> : <Redirect to={SERVICE_PANEL}/>;
         } else {
             return (
@@ -74,10 +75,69 @@ export class MobileLoginPage extends React.Component {
                         isMobile
                         passwordVisibility={this.state.passwordVisibility}
                         changePasswordVisibility={this.changePasswordVisibility}
-                        previousState={/*PREVIOUS_STATE*/undefined}
+                        //previousState={PREVIOUS_STATEundefined}
                         handleSubmit={this.handleSubmit}/>
                 </>
             );
         }
     }
+}*/
+export function MobileLoginPage(props) {
+    const previousLocation = props.location?.state;
+    const isUser = isUserByURLLocation(window.location.pathname);
+
+    const [stateFlags, setStateFlags] = useState({completed: false, hasError: false,
+    passwordVisibility: false});
+    const [inputValueState, setInputValueState] = useState();
+
+    const setInputValue = (event) => {
+        setInputValueState((state) => {
+           return {...state, [event.target.name]: event.target.value};
+        });
+    };
+
+    const changePasswordVisibility = () => {
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, {passwordVisibility: !prevState.passwordVisibility})
+        });
+    };
+
+    const handleSubmit = async(event) => {
+        const newState = await submit(event, getAPI('auth/login?parameter=' +
+            ((isUser)? 'USER' : 'ADMIN')), inputValueState?.emailOrPhone, inputValueState?.password);
+
+        setStateFlags((prevState) => {
+            return Object.assign({}, prevState, newState);
+        });
+    }
+
+    if (stateFlags.completed) {
+        return (isUser) ? <Redirect to={HOME_PAGE}/> : <Redirect to={SERVICE_PANEL}/>;
+       } else {
+           return (
+               <>
+                   <h1 className={styles.header}>
+                       Вход
+                   </h1>
+                   <div className={styles.mobileAuthorizationContainer}>
+                       <LoginInputsContainer
+                           isMobile
+                           emailOrPhone={inputValueState?.emailOrPhone}
+                           password={inputValueState?.password}
+                           passwordVisibility={inputValueState?.passwordVisibility}
+                           setInputValue={setInputValue}/>
+                   </div>
+                   {stateFlags.hasError &&
+                       <Error message={getErrorMessage()} />
+                   }
+                   <AuthLinksContainer
+                       isLogin
+                       isMobile
+                       passwordVisibility={stateFlags.passwordVisibility}
+                       changePasswordVisibility={changePasswordVisibility}
+                       previousState={previousLocation}
+                       handleSubmit={handleSubmit}/>
+               </>
+           );
+       }
 }
