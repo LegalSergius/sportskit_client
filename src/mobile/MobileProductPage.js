@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from "../components/Header";
 import {Link, Redirect} from "react-router-dom";
 import '../styles/mobile/MobileProductPage.css';
@@ -7,7 +7,7 @@ import {ProductImageContainer} from "../components/special/ProductImageContainer
 import {ProductInformationContainer} from "../components/special/ProductInformationContainer";
 import {ProductPaymentContainer} from "../components/special/ProductPaymentContainer";
 import {getProduct} from "../utils/ProductUtil";
-
+/*
 export default class MobileProductPage extends React.Component {
     constructor(props) {
         super(props);
@@ -81,4 +81,66 @@ export default class MobileProductPage extends React.Component {
             </div>
         );
     }
+}*/
+export default function MobileProductPage(props) {
+    const [productState, setProductState] = useState({product: null, productPromotion: null,
+        productType: undefined, mediaImagesArray: []});
+    const [flagsState, setFlagsState] = useState({redirectedToBasket: false,
+        redirectedToLoginPage: false});
+    const [userRole, setUserRole] = useState('');
+
+    const product = productState.product;
+
+    useEffect(() => {
+        getProduct(window.location.pathname.split('/'), localStorage.getItem('token'))
+            .then((productResponse) => {
+                setProductState(productResponse);
+            });
+    });
+
+    if (flagsState.redirectedToBasket) {
+        return (
+            <>
+                <Header />
+                <Redirect to={BASKET_PAGE} />
+            </>);
+    }
+
+    if (flagsState.redirectedToLoginPage) {
+        return <Redirect to={ENTER_PAGE} />
+    }
+
+    return (
+        <div id="mobileProductContainer">
+            <ProductImageContainer
+                isMobile
+                productMediaArray={productState.mediaImagesArray} />
+            <ProductInformationContainer
+                isMobile
+                product={product}
+                promotion={productState.productPromotion} />
+            <ProductPaymentContainer
+                isMobile
+                productId={product?.id}
+                changeRedirect={async(state) => {setFlagsState(state)}}/>
+            <div id="editPageContainer">
+                {userRole === 'ADMIN' &&
+                    <Link
+                        to={{
+                            pathname: ADD_PAGE + '/updateProduct',
+                            state: {
+                                object: {
+                                    dataValues: product,
+                                    mediaArray: productState.mediaImagesArray,
+                                    productType: productState.productType
+                                }
+                            }
+                        }}
+                        className="editPageButton">
+                        Редактировать объявление
+                    </Link>
+                }
+            </div>
+        </div>
+    );
 }
