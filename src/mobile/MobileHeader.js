@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../styles/mobile/MobileHeader.css';
 import {NavigationInput} from "../components/special/NavigationInput";
 import {Link, Redirect} from "react-router-dom";
@@ -12,7 +12,8 @@ import {getAPI, linkObject} from "../utils/ComponentUtils";
 import {getCurrentProducts} from "../utils/ProductUtil";
 import {fillArray, get} from "../httpTasks/tasks/ProductAPITasks";
 import Header from "../components/Header";
-
+import { StateContext } from '../contexts';
+/*
 export class MobileHeader extends React.Component {
     constructor(props) {
         super(props);
@@ -279,4 +280,253 @@ export class MobileHeader extends React.Component {
             </>
         );
     }
+}*/
+export function MobileHeader(props) {
+    const contextState = useContext(StateContext);
+
+    const [dataList, setDataList] = useState([]);
+    const [visibleListsState, setVisibleListState] = useState({catalogList: false, promotionList: false,
+        authorizationList: false});
+    const [isRedirected, setisRedirected] = useState(false);
+    const [productResponse, setProductResponse] = useState({});
+
+    useEffect(() => {
+        fixEnter();
+        window.onbeforeunload = function () {
+            fixExit();
+            return '';
+        }
+
+        getCurrentProducts().then(async(result) => {
+            let dataList = await fillArray(result);
+            setDataList(dataList);
+        });
+    });
+
+    const togglingActiveMenu = (event) => {
+        let mobileNavigation = document.querySelector('.mobileNavigation');
+        let navigationHamburgerButton = document.querySelector('.mobileButtonHamburger');
+        let mobileImageSwitcher = document.querySelector('.mobileImageSwitcher');
+        let productListPaginationContainer = document.querySelector('.bottomContainer');
+
+        mobileNavigation?.classList?.toggle('mobileNavigationActive');
+        navigationHamburgerButton?.classList?.toggle('mobileButtonHamburgerActive');
+        mobileImageSwitcher?.classList?.toggle('mobileImageSwitcherBlur');
+        productListPaginationContainer?.classList?.toggle('bottomContainerBlur');
+    }
+
+    const togglingListTumbler = (event, tumblerId) => {
+        event.preventDefault();
+
+        let currentTumbler = document.getElementById(tumblerId);
+        currentTumbler.classList.toggle('mobileListTumblerActive');
+
+        if (tumblerId === 'catalogListTumbler') {
+            setVisibleListState((state) => {
+                return {...state,  catalogList: !state.catalogList};    
+            });
+        } else if (tumblerId === 'promotionListTumbler') {
+            setVisibleListState((state) => {
+                return {...state,  promotionList: !state.promotionList};    
+            });
+        } else {
+            setVisibleListState((state) => {
+                return {...state,  authorizationList: !state.authorizationList};    
+            });
+        }
+    }
+
+    const submitResponse = async(event, inputValue) => {
+        try {
+            await get(getAPI('products/getProduct/' + inputValue),true)
+            .then((response) => {
+                    if (response.dataValues) {
+                        //this.setState({responseObject: response, redirected: true});
+                        setProductResponse(response);
+                        setisRedirected(true);
+                    }
+                }
+            );
+        } catch (e) {
+            console.log(`ошибка - ${e}`);
+            if (inputValue) {
+                alert('К сожалению, по значению "' + inputValue + '" ничего найдено. Повторите снова');
+            }
+        }
+    }
+
+    if (isRedirected) {
+        return (
+            <>
+                <Header />
+                <Redirect to={PRODUCT_PAGE + '/' + productResponse?.dataValues?.id}/>
+            </>);
+    }
+
+    return (
+        <>
+            <div id="mobileHeaderContainer">
+                <div id="mobileHeaderContainerChild">
+                    <NavigationInput
+                        isMobile
+                        propsSubmit={submitResponse}
+                        dataArray={dataList} />
+                </div>
+                <div className="mobileNavigation">
+                    <button
+                        id="mobileNavigationButton"
+                        onClick={(event) => togglingActiveMenu(event)}>
+                        <span className="mobileButtonHamburger">
+                        </span>
+                    </button>
+                    <Logotype
+                        isMobile
+                        toggleMenu={togglingActiveMenu} />
+                    <nav className="mobileNavigationList">
+                        <div>
+                            <Link
+                                to={CATALOG}
+                                className="mobileExpandableLink mobileNavigationLinks">
+                                Каталог
+                            </Link>
+                            <span
+                                id="catalogListTumbler"
+                                className="mobileListTumbler"
+                                onClick={(event) => togglingListTumbler(event, 'catalogListTumbler')}>
+                                &#x25B2;
+                            </span>
+                            {visibleListsState.catalogList &&
+                                <ul className="mobileCatalogAndPromotionList">
+                                    <Link
+                                        to={LIST_PAGE + '/equipment'}
+                                        className="mobileCatalogListLinks">
+                                        Оборудование
+                                    </Link>
+                                    <Link
+                                        to={LIST_PAGE + '/accessories'}
+                                        className="mobileCatalogListLinks">
+                                        Аксессуары
+                                    </Link>
+                                    <Link
+                                        to={LIST_PAGE + '/nutrition'}
+                                        className="mobileCatalogListLinks">
+                                        Питание
+                                    </Link>
+                                    <Link
+                                        to={LIST_PAGE + '/clothes'}
+                                        className="mobileCatalogListLinks">
+                                        Одежда
+                                    </Link>
+                                </ul> 
+                            }
+                        </div>
+                        <div>
+                            <Link
+                                to="/"
+                                onTouchStart={(event) => togglingActiveMenu(event)}
+                                className="mobileExpandableLink mobileNavigationLinks">
+                                Акции
+                            </Link>
+                            <span
+                                id="promotionListTumbler"
+                                className="mobileListTumbler"
+                                onClick={(event) => togglingListTumbler(event, 'promotionListTumbler')}>
+                                &#x25B2;
+                            </span>
+                            {visibleListsState.promotionList &&
+                                <ul className="mobileCatalogAndPromotionList">
+                                    <Link
+                                        to="/"
+                                        className="mobileCatalogListLinks">
+                                        Искать на товары
+                                    </Link>
+                                    <Link
+                                        to="/"
+                                        className="mobileCatalogListLinks">
+                                        Ввести промо-код
+                                    </Link>
+                                    <Link
+                                        to="/"
+                                        className="mobileCatalogListLinks">
+                                        Мои покупки
+                                    </Link>
+                                </ul> 
+                            }
+                        </div>
+                        <Link
+                            to={MAP_PAGE}
+                            onTouchStart={(event) => this.togglingActiveMenu(event)}
+                            className="mobileNavigationLinks">
+                            Карта филиалов
+                        </Link>
+                        <Link
+                            to={linkObject(INFORMATION_PAGE, true)}
+                            onTouchStart={(event) => this.togglingActiveMenu(event)}
+                            className="mobileNavigationLinks">
+                            О магазине
+                        </Link>
+                        <div>
+                            <Link
+                                to={linkObject(AUTH_PAGE)}
+                                className="mobileExpandableLink mobileNavigationLinks">
+                                Учетные записи
+                            </Link>
+                            <span
+                                id="authorizationListTumbler"
+                                className="mobileListTumbler"
+                                onClick={(event) =>
+                                    this.togglingListTumbler(event, 'authorizationListTumbler')}>
+                                &#x25B2;
+                            </span>
+                            {visibleListsState.authorizationList &&
+                                <ul className="mobileCatalogAndPromotionList">
+                                    {contextState.authState.auth?
+                                        <span
+                                            className="mobileCatalogListLinks"
+                                            onClick={() => {
+                                                changeAuthState();
+                                                contextState.setAuthState({auth: false, userName: '',
+                                                    userRole: ''});
+                                                window.location.reload(true);
+                                            }}>
+                                            Выйти
+                                        </span>
+                                        :
+                                        <>
+                                            <Link
+                                                to={{
+                                                    pathname: ENTER_PAGE + 'user'
+                                                }}
+                                                className="mobileCatalogListLinks">
+                                                Войти
+                                            </Link>
+                                            <Link
+                                                to={{
+                                                    pathname: ENTER_PAGE + 'admin'
+                                                }}
+                                                className="mobileCatalogListLinks">
+                                                Я - админ.
+                                            </Link>
+                                        </>}
+                                    {contextState.authState.userRole === 'ADMIN' &&
+                                        <Link
+                                            to={SERVICE_PANEL}
+                                            className="mobileCatalogListLinks">
+                                            Служебная панель
+                                        </Link>
+                                    }
+                                </ul> }
+                        </div>
+                        <Link
+                            to={BASKET_PAGE}
+                            onTouchStart={(event) => togglingActiveMenu(event)}
+                            className="mobileNavigationLinks">
+                            Корзина товаров
+                        </Link>
+                    </nav>
+                </div>
+            </div>
+        </>
+    );
+
 }
