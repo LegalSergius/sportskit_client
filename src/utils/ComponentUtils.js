@@ -76,5 +76,5 @@ export function linkObject(page, isMobile = false) {
 
 
 export function getAPI(address) {
-    return 'http://192.168.1.43:6677/api/' + address;
+    return 'http://192.168.1.45:6677/api/' + address;
 }
