@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../styles/regular/ProductPage.css';
 import {ADD_PAGE, BASKET_PAGE, ENTER_PAGE} from "../routing/routing_consts";
 import {Link, Redirect} from "react-router-dom";
@@ -9,7 +9,8 @@ import {ProductImageContainer} from "./special/ProductImageContainer";
 import {ProductPaymentContainer} from "./special/ProductPaymentContainer";
 import {ProductInformationContainer} from "./special/ProductInformationContainer";
 import {getProduct} from "../utils/ProductUtil";
-
+import { StateContext } from '../contexts';
+/*
 export default class ProductPage extends React.Component {
     constructor(props) {
         super(props);
@@ -106,4 +107,75 @@ export default class ProductPage extends React.Component {
             </MediaQuery>
         );
     }
+}*/
+export default function ProductPage(props) {
+    const contextState = useContext(StateContext);
+    
+    const [links, setLinks] = useState({redirectedToBasket: false, redirectedToLoginPage: false});
+    const [productInformation, setProductInformation] = useState({product: null, promotion: null, type: undefined,
+        media:[]});
+
+    useEffect(() => {
+        getProduct(window.location.pathname.split('/'), localStorage.getItem('token'))
+        .then((productResponse) => {
+            setProductInformation(productResponse);
+        });
+    }, [props.history.location.pathname]);
+
+    const product = productInformation.product;
+    const productName = product?.name ?? 'Товар', productPromotion = productInformation.promotion;
+
+    document.title = productName + " | Sports Kit";
+
+    if (links.redirectedToBasket) {
+        return (
+            <>
+                <Header />
+                <Redirect to={BASKET_PAGE} />
+            </>);
+    } 
+    if (links.redirectedToLoginPage) {
+        return <Redirect to={ENTER_PAGE} />
+    }
+
+    return (
+        <>
+            {contextState.isMobile
+                ?
+                <MobileProductPage/>
+                :
+                <div id="imageSelector">
+                    <div id="productImageContainer">
+                        <ProductImageContainer media={productInformation.media} />
+                        <ProductPaymentContainer
+                            productId={product?.id}
+                            changeRedirect={async(state) => {setLinks(state)}}/>
+                    </div>
+                    <div id="productDescriptionContainer">
+                        <ProductInformationContainer
+                            product={product}
+                            promotion={productPromotion} />
+                        <div id="editPageContainer">
+                            {contextState.authState.userRole === 'ADMIN' &&
+                                <Link
+                                    to={{                                                
+                                        pathname: ADD_PAGE + '/updateProduct',
+                                        state: {
+                                            object: {
+                                                dataValues: product,
+                                                mediaArray: productInformation.media,
+                                                productType: productInformation.type 
+                                            }                                                    
+                                        }
+                                    }}
+                                    className="editPageButton">
+                                    Редактировать объявление
+                                </Link>
+                            }   
+                        </div>
+                    </div>
+                </div>
+            }
+        </>
+    );
 }

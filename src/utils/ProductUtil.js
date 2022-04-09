@@ -12,8 +12,8 @@ export async function getProduct(currentPath, token) {
 
     await get(getAPI('products/getProduct/ ' + productId), true)
         .then((response) => {
-            finalResponse = {productObject: {product: response.dataValues, mediaImagesArray: response.mediaArray,
-                productPromotion: response.promotion, productType: response.productType}, userRole: role};
+            finalResponse = {product: response?.dataValues, promotion: response?.promotion, 
+                type: response?.productType, media: response?.mediaArray};
     });
 
     return finalResponse;

@@ -61,11 +61,11 @@ export function ProductImageContainer(props) {
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
     const setSrcFile = (fileIndex) => {
-        return "data:image/png;base64," + props.productMediaArray[fileIndex];
+        return "data:image/png;base64," + props.media[fileIndex];
     };
 
     const changeCurrentIndex = (newPhotoIndex) => {
-        const lastIndex = props.productMediaArray.length - 1;
+        const lastIndex = props.media.length - 1;
 
         if (newPhotoIndex < 0) {
             newPhotoIndex = lastIndex;
