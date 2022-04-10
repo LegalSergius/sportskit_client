@@ -20,5 +20,5 @@ export async function getProduct(currentPath, token) {
 }
 
 export async function getCurrentProducts() {
-    return await get(getAPI('products/getProducts?mediaRequired=' + false));
+    return await get(getAPI('products/getProducts?mediaRequired=false'));
 }

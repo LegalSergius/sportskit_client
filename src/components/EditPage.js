@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState } from 'react';
 import styles from '../styles/index.module.css';
 import '../styles/regular/EditPage.css';
 import {fillArray, get, remove} from "../httpTasks/tasks/ProductAPITasks";
@@ -8,7 +8,7 @@ import {ADD_PAGE, SERVICE_PANEL} from "../routing/routing_consts";
 import {Redirect} from "react-router-dom";
 import {getCurrentProducts} from "../utils/ProductUtil";
 import {NavigationInputHandler} from "../utils/NavigationInputHandler";
-
+/*
 export default class EditPage extends React.Component {
     constructor(props) {
         super(props);
@@ -208,8 +208,8 @@ export default class EditPage extends React.Component {
                             id="textInput"
                             className={styles.addPageInputs}
                             type="text"
-                            onKeyDown={(event) => /*handleInputKeyDown(this.state.filteredDataArray,
-                                currentObject, document.getElementsByClassName(styles.addPromotionListItem), event)*/
+                           // onKeyDown={(event) => handleInputKeyDown(this.state.filteredDataArray,
+                             //   currentObject, document.getElementsByClassName(styles.addPromotionListItem), event)
                                 handler.handleInputKeyDown(event, LIST_ITEMS)
                             }
                             onBlur={(event) => this.removeFilteredData(event)}
@@ -223,12 +223,12 @@ export default class EditPage extends React.Component {
                                         className={styles.addPromotionListItem}
                                         tabIndex="0"
                                         key={element.toString()}
-                                        onKeyDown={(event) => /*
-                                            handleListItemKeyDown(this.state.filteredDataArray, currentObject,
+                                        onKeyDown={(event) => 
+                                           // handleListItemKeyDown(this.state.filteredDataArray, currentObject,
                                                 document.getElementsByClassName(styles.addPromotionListItem), event).then(
                                                     (result) => this.listItemIndex = result
-                                            )}*/
-                                            handler.handleListItemKeyDown(event, LIST_ITEMS)
+                                            )}
+                                            //handler.handleListItemKeyDown(event, LIST_ITEMS)
                                                 .then((result) => this.listItemIndex = result)
                                         }
 
@@ -269,4 +269,270 @@ export default class EditPage extends React.Component {
             </div>
         );
     }
-}
+}*/
+export default function EditPage(props) {
+    const contextState = useContext(StateContext);
+
+    const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [product, setProduct] = useState({});
+    const [representation, setRepresentation] = useState({header: '', labelForInput: ''});
+    const [textinputValue, setTextInputValue] = useState('');
+    const [stateFlags, setStateFlags] = useState({deletePromotion: false, editProduct: false,
+    confirmed: false, redirected: false, hasError: false, completed: false})
+
+    let currentSection = window.location.pathname.split('/').at(-1);
+
+    useEffect(() => {
+        let newTitle;
+        let textInput = document.getElementById('textInput');
+        textInput.addEventListener('keydown', handleChangeInputValue);
+
+        switch (currentSection) {
+            case 'product':
+                newTitle = 'Редактирование | Sports Kit';
+                getCurrentProducts().then(async(response) => {
+                   // this.setState({dataArray: await fillArray(response),
+                     //   header: 'Редактирование объявлений', editProduct: true,
+                       // labelForInput: 'Введите название товара, объявление которого Вы хотите изменить:'});
+                      
+                       setData(await fillArray(response)); 
+                       setRepresentation({header: 'Редактирование объявлений', 
+                       labelForInput: 'Введите название товара, объявление которого Вы хотите изменить:'});
+                       setStateFlags((state) => {return {...state, editProduct: true}});
+                });
+                break;
+            case 'deleteProduct':
+                newTitle = 'Удаление товара | Sports Kit';
+                getCurrentProducts().then(async(response) => {
+                    //this.setState({dataArray: await fillArray(response), header: 'Удаление товаров',
+                      //  labelForInput: 'Удаление товаров'
+                   // });
+                   setData(await fillArray(response));
+                   setRepresentation({header: 'Удаление товаров', 
+                   labelForInput: 'Введите название товара, который хотите удалить:'});
+                });
+                break;
+            case 'deletePromotion':
+                newTitle = 'Удаление скидки | Sports Kit';
+                get(getAPI('products/getPromotions')).then(async(response) => {
+                   // this.setState({dataArray: await fillArray(response),
+                   //     header: 'Удаление акций на товар', deletePromotion: true,
+                     //   labelForInput: 'Введите название скидки на товар, которую нужно убрать:'
+                    //});
+                    setData(await fillArray(response));
+                    setRepresentation({header: 'Удаление акций на товар', 
+                    labelForInput: 'Введите название скидки на товар, которую нужно убрать:'});
+                    setStateFlags((state) => {return {...state, deletePromotion: true}});
+                });
+                break;
+            case 'deletePromoCode':
+                newTitle = 'Удаление промо-кода | Sports Kit';
+                get(getAPI('products/getPromoCodes')).then(async(response) => {
+                   // this.setState({dataArray: await fillArray(response),
+                     //   header: 'Удаление промо-кодов',
+                       // labelForInput: 'Введите название промо-кода, которого необходимо удалить:'
+                    //});
+                    setData(await fillArray(response));
+                    setRepresentation({header: 'Удаление промо-кодов', 
+                    labelForInput: 'Введите название промо-кода, которого необходимо удалить:'});
+                });
+                break;
+        }
+
+        document.title = newTitle;
+
+        return () => {
+            if (textInput) {
+                textInput.removeEventListener('keydown', handleChangeInputValue);
+            }
+        };
+    });
+
+    const handleChangeInputValue = (event) => {
+        if (stateFlags.confirmed) {
+            return;
+        }
+
+        const key = String(event.key), code = event.code;
+        let value = event.target.value;
+
+        if (key === 'Backspace') {
+            value = value.slice(0, -1);
+        } else if (key === 'Enter') {
+            return;
+        } else if (code.includes('Key') || code.includes('Digit') ||
+        code.includes('Minus') || code.includes('Equal')) {
+            value += key;
+        }
+
+        let filteredDataArray = [];
+        if (value.length > 0) {
+            filteredDataArray = data.filter((element) => {
+                return element.toLowerCase().includes(value.toLowerCase());
+            });
+        }
+        //this.setState({filteredDataArray, textInputValue: value});
+        setFilteredData(filteredDataArray);
+        setTextInputValue(value);
+    };
+
+    const onListItemSelected = async(event, itemValue) => {
+        if (itemValue) {
+            await submitResponse(event, itemValue);
+        }
+    };
+
+    const removeFilteredData = (event) => {
+        if (!event.relatedTarget) {
+            //this.setState({filteredDataArray: []});
+            setFilteredData([]);
+        }
+    };
+
+    const submitResponse = async(event, textInputValue) => {
+        event.preventDefault();
+
+        let newState, response;
+        try {
+            switch (currentSection) {
+                case 'product':
+                    response = await get(getAPI('products/getProduct/' + textInputValue), true);
+                    newState = {hasError: false, redirected: true};
+                    break;
+                case 'deleteProduct':
+                    response = await get(getAPI('products/getProduct/' + textInputValue), false);
+                    newState = {hasError: false, confirmed: true};
+                    break;
+                case 'deletePromotion':
+                    response = await get(encodeURI(getAPI('products/getPromotion?value=' + textInputValue)));
+                    newState = {hasError: false, confirmed: true};
+                    break;
+                case 'deletePromoCode':
+                    response = await get(getAPI('products/getPromoCode/' + textInputValue));
+                    newState = {hasError: false, confirmed: true};
+                    break;
+            }
+
+            if (response) {
+                //this.setState({responseObject: response,  ...state})
+                setProduct(response);
+                setStateFlags((state) => {return {...state, newState}});
+            }
+        } catch (e) {
+            console.log('error - ' + e);
+            //this.setState({hasError: true});
+            setStateFlags((state) => {return {...state, hasError: true}});
+        }
+    };
+
+    const onEditButtonsClick = async(event, isCompleted) => {
+        event.preventDefault();
+
+        if (!isCompleted) {
+            //this.setState({completed: true});
+            setStateFlags((state) => {return {...state, completed: true}});
+        } else {
+            let response;
+
+            switch (this.currentSection) {
+                case 'deleteProduct':
+                    response = await remove(getAPI('api/products/deleteProduct/' + textInputValue));
+                    break;
+                case 'deletePromotion':
+                    response = await remove(encodeURI(getAPI('products/deletePromotion?value=' + textInputValue)));
+                    break;
+                case 'deletePromoCode':
+                    response = await remove(getAPI('products/deletePromoCode/' + textInputValue));
+                    break;
+            }
+            if (response?.message === 'Ok') {
+              //  this.setState({completed: true});
+              setStateFlags((state) => {return {...state, completed: true}});
+            }
+        }
+    };
+
+    if (stateFlags.redirected) {
+        return <Redirect to={{
+            pathname: ADD_PAGE + '/updateProduct',
+            state: {object: product, isMobile: contextState.isMobile}
+        }} />
+    } 
+    if (stateFlags.completed) {
+        return <Redirect to={SERVICE_PANEL} />
+    }
+    const listItems = document.getElementsByClassName(styles.addPromotionListItem);
+    let handler = new NavigationInputHandler(filteredData, this);
+
+    return (
+        <div id="editPageCommonContainer">
+            <h2 className={styles.commonFont}>
+                {representation.header}
+            </h2>
+            <label className="editPageLabels">
+                {representation.labelForInput}
+                <div id="editTextInputContainer">
+                     <input
+                        id="textInput"
+                        className={styles.addPageInputs}
+                        type="text"
+                        onKeyDown={(event) => //handleInputKeyDown(this.state.filteredDataArray,
+                         //   currentObject, document.getElementsByClassName(styles.addPromotionListItem), event)
+                            handler.handleInputKeyDown(event, listItems)
+                        }
+                        onBlur={(event) => removeFilteredData(event)}
+                        value={textInputValue}
+                        placeholder={stateFlags.deletePromotion? "Например: -10% на товар..." : ""}
+                        autoComplete="off"/>
+                    <ul className={styles.addPromotionList}>
+                        {filteredData.length &&
+                            filteredData.map((element) =>
+                                <li
+                                    className={styles.addPromotionListItem}
+                                    tabIndex="0"
+                                    key={element.toString()}
+                                    onKeyDown={(event) => 
+                                       // handleListItemKeyDown(this.state.filteredDataArray, currentObject,
+                                           // document.getElementsByClassName(styles.addPromotionListItem), event).then(
+                                             //   (result) => this.listItemIndex = result\
+                                        handler.handleListItemKeyDown(event, listItems)
+                                            .then((result) => this.listItemIndex = result)
+                                    }
+                                    onMouseDown={() => onListItemSelected(element)}
+                                    onBlur={(event) => removeFilteredData(event)}>
+                                    {element}
+                                </li>
+                            )
+                        }
+                    </ul>
+                </div>
+            </label>
+            {stateFlags.hasError &&
+                <span
+                    className={styles.errorMessage}>
+                    {getErrorMessage()}
+                </span>
+            }
+            {stateFlags.confirmed &&
+                <label
+                    id="buttonsLabel"
+                    className="editPageLabels">
+                    Подтвердить действие?
+                    <div>
+                        <button
+                            className="editPageButtons"
+                            onClick={(event) => onEditButtonsClick(event, true)}>
+                            Да
+                        </button>
+                        <button
+                            className="editPageButtons"
+                            onClick={(event) => onEditButtonsClick(event, false)}>
+                            Нет
+                        </button>
+                    </div>
+                </label>
+            }
+        </div>
+    );
+} 
