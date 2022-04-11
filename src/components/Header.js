@@ -318,14 +318,16 @@ export default class Header extends React.Component {
     }
 }*/
 
-const LIST_FLAGS = {isAuthorizationListShown: 0b001, isCatalogShown: 0b010, isSharesListShown: 0b100};
+//const LIST_FLAGS = {isAuthorizationListShown: 0b001, isCatalogShown: 0b010, isSharesListShown: 0b100};
 
 export default function Header() {
     const contextState = useContext(StateContext);
     
     const [dataList, setDataList] = useState([]);
     const [overrideState, setOverrideState] = useState({responseObject: null, isRedirected: false});
-    const [flagState, setFlagState] = useState(0);
+   // const [flagState, setFlagState] = useState(0);
+    const [flagState, setFlagState] = useState({isAuthorizationListShown: false, isCatalogShown: false, 
+        isSharesListShown: false});
 
     useEffect(async() => {
         fixEnter();
@@ -347,7 +349,7 @@ export default function Header() {
                 <Redirect to={PRODUCT_PAGE + '/' + overrideState.responseObject.dataValues.id}/>
             </>);
     }
-
+    console.log(`${flagState.isAuthorizationListShown} ${flagState.isCatalogShown} ${flagState.isSharesListShown}`);
     return (
         <>
             {contextState.isMobile
@@ -371,9 +373,10 @@ export default function Header() {
                         <div id="mainButtonsContainer">
                             <button
                                 id="accountsButton"
-                                onMouseOver={() => showList(0, flagState, setFlagState)}
-                                onMouseOut={(event) => clearList(event, 0,
-                                    flagState, setFlagState)}>
+                                //onMouseOver={() => showList(0, flagState, setFlagState)}
+                                onMouseOver={() => showList(0, setFlagState)}
+                                onMouseOut={/*(event) => clearList(event, 0,
+                                flagState, setFlagState)*/(event) => clearList(event, 0, setFlagState)}>
                                 <img
                                     id="accountsButtonPic"
                                     src="/static/accounts_button_pic.png"
@@ -386,7 +389,8 @@ export default function Header() {
                                     className="authListItemLink">
                                     Учетные записи
                                 </Link>
-                                {(flagState & LIST_FLAGS.isAuthorizationListShown) &&
+                                {/*(flagState & LIST_FLAGS.isAuthorizationListShown) &&*/}
+                                {flagState.isAuthorizationListShown &&
                                     <div className="authListContainer">
                                         <NavigationMenu
                                             isAuth={contextState.authState.auth}
@@ -402,7 +406,7 @@ export default function Header() {
                                 }
                             </button>
                             <Link
-                                to={linkObject(BASKET_PAGE, false)}
+                                to={BASKET_PAGE}
                                 id="basketButton">
                                 <img
                                     id="basketButtonPic"
@@ -417,19 +421,21 @@ export default function Header() {
                     <ul id="navigationList">
                         <li
                             className="menuItem"
-                            onMouseOver={() => showList(1, flagState, setFlagState)}
-                            onMouseOut={(event) => clearList(event, 1, flagState,
-                                setFlagState)}>
+                            //onMouseOver={() => showList(1, flagState, setFlagState)}
+                            onMouseOver={() => showList(1, setFlagState)}
+                            onMouseOut={/*(event) => clearList(event, 1,
+                                flagState, setFlagState)*/(event) => clearList(event, 1, setFlagState)}>
                             <Link
-                                to={linkObject(CATALOG, false)}
+                                to={CATALOG}
                                 className="menuItemLink"
-                                onMouseOut={(event) => clearList(event, 1, flagState,
-                                    setFlagState)}>
+                                onMouseOut={/*(event) => clearList(event, 1,
+                                    flagState, setFlagState)*/(event) => clearList(event, 1, setFlagState)}>
                                 <span id="listItem1">
                                     Каталог
                                 </span>
                             </Link>
-                            {(flagState & LIST_FLAGS.isCatalogShown) &&
+                             {/*(flagState & LIST_FLAGS.isCatalogShown) &&*/}
+                             {flagState.isCatalogShown &&
                                 <ul className="dropDownList">
                                     <li
                                         className="dropDownListItem"
@@ -443,8 +449,8 @@ export default function Header() {
                                     </li>
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 1,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 1,
+                                            flagState, setFlagState)*/(event) => clearList(event, 1, setFlagState)}>
                                         <Link
                                             to={LIST_PAGE + '/accessories'}
                                             className="dropDownListItemLink">
@@ -453,8 +459,8 @@ export default function Header() {
                                     </li>
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 1,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 1,
+                                            flagState, setFlagState)*/(event) => clearList(event, 1, setFlagState)}>
                                         <Link
                                             to={LIST_PAGE + '/nutrition'}
                                             className="dropDownListItemLink">
@@ -463,8 +469,8 @@ export default function Header() {
                                     </li>
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 1,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 1,
+                                            flagState, setFlagState)*/(event) => clearList(event, 1, setFlagState)}>
                                         <Link
                                             to={LIST_PAGE + '/clothes'}
                                             className="dropDownListItemLink">
@@ -476,24 +482,26 @@ export default function Header() {
                         </li>
                         <li
                             className="menuItem"
-                            onMouseOver={() => showList(2, flagState, setFlagState)}
-                            onMouseOut={(event) => clearList(event, 2, flagState,
-                                setFlagState)}>
+                            //onMouseOver={() => showList(2, flagState, setFlagState)}
+                            onMouseOver={() => showList(2, setFlagState)}
+                            onMouseOut={/*(event) => clearList(event, 2,
+                                flagState, setFlagState)*/(event) => clearList(event, 2, setFlagState)}>
                             <Link
                                 to="/"
                                 className="menuItemLink"
-                                onMouseOut={(event) => clearList(event, 2, flagState,
-                                    setFlagState)}>
+                                onMouseOut={/*(event) => clearList(event, 2,
+                                    flagState, setFlagState)*/(event) => clearList(event, 2, setFlagState)}>
                                 <span id="listItem2">
                                     Акции
                                 </span>
                             </Link>
-                            {flagState & LIST_FLAGS.isSharesListShown &&
+                             {/*(flagState & LIST_FLAGS.isSharesListShown) &&*/}
+                            {flagState.isSharesListShown &&
                                 <ul className="dropDownList">
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 2,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 2,
+                                            flagState, setFlagState)*/(event) => clearList(event, 2, setFlagState)}>
                                         <Link
                                             to="/"
                                             className="dropDownListItemLink">
@@ -502,8 +510,8 @@ export default function Header() {
                                     </li>
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 2,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 2,
+                                            flagState, setFlagState)*/(event) => clearList(event, 2, setFlagState)}>
                                         <Link
                                             to="/"
                                             className="dropDownListItemLink">
@@ -512,8 +520,8 @@ export default function Header() {
                                     </li>
                                     <li
                                         className="dropDownListItem"
-                                        onMouseOut={(event) => clearList(event, 2,
-                                            flagState, setFlagState)}>
+                                        onMouseOut={/*(event) => clearList(event, 2,
+                                            flagState, setFlagState)*/(event) => clearList(event, 2, setFlagState)}>
                                         <Link
                                             to="/"
                                             className="dropDownListItemLink">
@@ -532,7 +540,7 @@ export default function Header() {
                         </li>
                         <li className="menuItem">
                             <Link
-                                to={linkObject(INFORMATION_PAGE, false)}
+                                to={INFORMATION_PAGE}
                                 className="menuItemLink">
                                 О магазине
                             </Link>
@@ -544,37 +552,51 @@ export default function Header() {
     );
 }
 
-function showList(position, flagState, setFlagState) {
+function showList(position, setFlagState) {
+    let newState = {};
+
     if (position === 0) {
-        flagState |= LIST_FLAGS.isAuthorizationListShown;
+        //flagState |= LIST_FLAGS.isAuthorizationListShown;
+        newState = {isAuthorizationListShown: true};
     } else if (position === 1) {
         document.getElementById('listItem1').style.color = '#3088C7';
-        flagState |= LIST_FLAGS.isCatalogShown;
+       //flagState |= LIST_FLAGS.isCatalogShown;
+       newState = {isCatalogShown: true};
     } else {
         document.getElementById('listItem2').style.color = '#3088C7';
-        flagState |= LIST_FLAGS.isSharesListShown;
+        //flagState |= LIST_FLAGS.isSharesListShown;
+        newState = {isSharesListShown: true};
     }
-
-    setFlagState(flagState);
+    //setFlagState(flagState);
+    setFlagState((state) => {
+        return Object.assign({}, state, newState);
+    });
 }
 
-function clearList(event, position, flagState, setFlagState) {
+function clearList(event, position, setFlagState) {
     let relatedTarget = event.relatedTarget.className;
+    let newState = {};
 
     if (relatedTarget !== 'dropDownListItem' && relatedTarget !== 'dropDownListItemLink'
         && relatedTarget !== 'authList' && relatedTarget !== 'authListContainer'
         && relatedTarget !== 'authListItem' && relatedTarget !== 'authListItemLink') {
         if (position === 0) {
-            flagState &= ~LIST_FLAGS.isAuthorizationListShown;
+            //flagState &= ~LIST_FLAGS.isAuthorizationListShown;
+            newState = {isAuthorizationListShown: false};
         }
         else if (position === 1) {
             document.getElementById('listItem1').style.color = '#FFF';
-            flagState &= ~LIST_FLAGS.isCatalogShown;
+            //flagState &= ~LIST_FLAGS.isCatalogShown;
+            newState = {isCatalogShown: false};
         } else {
             document.getElementById('listItem2').style.color = '#FFF';
-            flagState &= ~LIST_FLAGS.isSharesListShown;
+            //flagState &= ~LIST_FLAGS.isSharesListShown;
+            newState = {isSharesListShown: false};
         }
     }
 
-    setFlagState(flagState);
+    //setFlagState(flagState);
+    setFlagState((state) => {
+        return Object.assign({}, state, newState);
+    });
 }

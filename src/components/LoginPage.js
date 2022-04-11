@@ -122,7 +122,7 @@ export default function LoginPage(props) {
 
     const changePasswordVisibility = () => {
         setStateFlags((prevState) => {
-            return Object.assign({}, prevState, {passwordVisibility: !prevState.passwordVisibility})
+            return Object.assign({}, prevState, {passwordVisibility: !prevState.passwordVisibility});
         });
     };
 
