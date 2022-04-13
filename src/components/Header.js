@@ -349,7 +349,7 @@ export default function Header() {
                 <Redirect to={PRODUCT_PAGE + '/' + overrideState.responseObject.dataValues.id}/>
             </>);
     }
-    console.log(`${flagState.isAuthorizationListShown} ${flagState.isCatalogShown} ${flagState.isSharesListShown}`);
+    
     return (
         <>
             {contextState.isMobile

@@ -40,12 +40,10 @@ export async function handleListItemKeyDown(dataArray, currentComponentObject, l
 
 export function submitResponse(event, inputValue) {
     try {
-        get(getAPI('products/getProduct/' + inputValue),
-            true).then((response) => {
-                if (response.dataValues) {
-                    console.log(`response - ${JSON.stringify(response.dataValues)}`);
-
-                    return {responseObject: response, isRedirected: true};
+        get(getAPI('products/getProduct/' + inputValue),true).then((response) => {
+            if (response?.dataValues) {
+                console.log(`response - ${JSON.stringify(response?.dataValues)}`);
+                return {responseObject: response, isRedirected: true};
                 }
             }
         );

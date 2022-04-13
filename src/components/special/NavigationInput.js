@@ -93,17 +93,17 @@ export class NavigationInput extends React.Component {
 }*/
 
 export function NavigationInput(props) {
+    const ENTER_BUTTON = 13, ARROW_DOWN = 40, ARROW_UP = 38;
+
     const [filteredDataArray, setFilteredDataArray] = useState([]);
     const [inputAreaValue, setInputAreaValue] = useState();
 
     const textInput = document.getElementById('mainInput');
-    const listItems = document.getElementsByClassName("listItem");
-    const isNullLength = (filteredDataArray.length === 0)
+    const isNullLength = (filteredDataArray.length === 0);
     const currentComponent = this;
     const handler = new NavigationInputHandler(filteredDataArray, currentComponent);
 
-    let listItemIndex;
-
+    let keyCode, listItems, listItemIndex;
 
     const setInputValue = (event) => {
         const value = event.target.value;
@@ -119,6 +119,50 @@ export function NavigationInput(props) {
             return {...state, [event.target.name]: event.target.value};
         });
         setFilteredDataArray(filteredDataArray);
+    };
+
+    const handleInputKeyDown = async(event) => {
+        keyCode = event.keyCode;
+        listItems = Array.from(document.getElementsByClassName("listItem"));
+
+        if (keyCode === ENTER_BUTTON) {
+            onListItemSelected(event, filteredDataArray[0]);
+        } else if (keyCode === ARROW_DOWN) {
+            listItemIndex = 0;
+
+            listItems[listItemIndex].focus();
+        }
+    };
+
+    const handleListItemKeyDown = async(event) => {
+        listItems = Array.from(document.getElementsByClassName("listItem"));
+        console.log(listItems);
+        keyCode = event.keyCode;
+        let listLength = listItems.length - 1;
+
+        console.log(`${listItems[listItemIndex]} ${listItemIndex}`);
+
+        if (keyCode === ENTER_BUTTON) {
+            onListItemSelected(event, filteredDataArray[listItemIndex]);
+        } else if (keyCode === ARROW_DOWN) {
+            ++listItemIndex;
+
+            if (listItemIndex > listLength) {
+                listItemIndex = 0;
+            }
+
+            listItems[listItemIndex].focus();
+        } else if (keyCode === ARROW_UP) {
+            --listItemIndex;
+
+            if (listItemIndex < 0) {
+               textInput.focus();
+            } else {
+                listItems[listItemIndex].focus();
+            }
+        }
+
+        return listItemIndex;
     };
 
     const onListItemSelected = (event, itemValue) => {
@@ -139,21 +183,21 @@ export function NavigationInput(props) {
                 id={props.isMobile? "mobileMainInput" : "mainInput"}
                 type="text"
                 onChange={(event) => setInputValue(event)}
-                onKeyDown={(event) => handler.handleInputKeyDown(event, listItems)}
-                onBlur={(event) => this.removeFilteredData(event)}
+                onKeyDown={(event) => handleInputKeyDown(event)}
+                onBlur={(event) => removeFilteredData(event)}
                 value={inputAreaValue?.inputValue}
                 name="inputValue"
                 placeholder="Поиск товара..."
                 autoComplete="off" />
             <ul className={styles.addPromotionList}>
                 {!isNullLength &&
-                    filteredDataArray.map((element) =>
+                    filteredDataArray.map((element, index) =>
                         <li
                             className={props.isMobile? "mobileListItem" : "listItem"}
                             tabIndex="0"
+                            key={index}
                             onKeyDown={(event) => {
-                                handler.handleListItemKeyDown(event, listItems)
-                                    .then((result) => listItemIndex = result)
+                                listItemIndex = handleListItemKeyDown(event);
                             }}
                             onTouchStart={(event) => onListItemSelected(event, element)}
                             onMouseDown={(event) => onListItemSelected(event, element)}
@@ -165,6 +209,5 @@ export function NavigationInput(props) {
             </ul>
         </div>
     );
-
 
 }
